@@ -1,0 +1,11 @@
+Id_tipo:
+0=superadmin
+1=admni
+2=usuario
+
+categoria:
+ Audio 0
+ Video 1 
+ Micro  2
+ Opto   3
+
