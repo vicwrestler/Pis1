@@ -10,11 +10,20 @@ package Clases;
  * @author w-res
  */
 public class quejas {
+    private int Id;
     private String titulo;
     private String descripcion;
     private int id_usuario;
     private String respuesta;
     private int id_admin;
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        this.Id = Id;
+    }
 
     public String getTitulo() {
         return titulo;

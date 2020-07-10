@@ -1,6 +1,5 @@
 package Interfaces;
 
-
 import Clases.Persona_en_sesion;
 import Model.SqlUsuarios;
 import Utilerias.hash;
@@ -12,20 +11,21 @@ import javax.swing.JOptionPane;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author danie
  */
 public class Login0 extends javax.swing.JFrame {
-NuevoUsuario newusu=null;
-InicioAdmin frmInicioAdmin=null;
+
+    NuevoUsuario newusu = null;
+    InicioAdmin frmInicioAdmin = null;
     InicioSuperAdmin frmsuperAdmin;
-    ListaProductos frmListaProductos;
+    ListaProductos frmListaProductos=null;
+
     /**
      * Creates new form Login0
      */
-    
+
     public Login0() {
         initComponents();
     }
@@ -78,6 +78,11 @@ InicioAdmin frmInicioAdmin=null;
         jLabel3.setText("Contraseña:");
 
         botonRegresar.setText("Regresar");
+        botonRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegresarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,57 +144,65 @@ InicioAdmin frmInicioAdmin=null;
     }//GEN-LAST:event_txtusuarioActionPerformed
 
     private void botonNuevoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNuevoUsuarioActionPerformed
-        if(newusu==null){
-            newusu=new NuevoUsuario();
+        if (newusu == null) {
+            newusu = new NuevoUsuario();
             newusu.setVisible(true);
             this.dispose();
-        }else{
-        JOptionPane.showMessageDialog(null, "no entro");
-    }
+        }
     }//GEN-LAST:event_botonNuevoUsuarioActionPerformed
 
     private void botonContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonContinuarActionPerformed
 
-        SqlUsuarios modSql=new SqlUsuarios();
-        Persona_en_sesion per_ses=new Persona_en_sesion();
-        String pass=new String(txtcontra.getPassword());
-        if(!txtusuario.getText().equals("")& !pass.equals("")){
-            String newpass=hash.hash1(pass);
-            System.out.print(newpass); 
+        SqlUsuarios modSql = new SqlUsuarios();
+        Persona_en_sesion per_ses = new Persona_en_sesion();
+        String pass = new String(txtcontra.getPassword());
+        if (!txtusuario.getText().equals("") & !pass.equals("")) {
+            String newpass = hash.hash1(pass);
+            System.out.print(newpass);
             per_ses.setCorreo(txtusuario.getText());
             per_ses.setContraseña(newpass);
-            if(modSql.login(per_ses)){
-                if(per_ses.getTipo_usuario()==1){
-                    if(frmInicioAdmin==null){
-                        frmInicioAdmin=new InicioAdmin(per_ses);
-                        frmInicioAdmin.setVisible(true);
-                        this.dispose();
-                    }
-                }else if(per_ses.getTipo_usuario()==2){
-                    if(frmListaProductos==null){
-                        frmListaProductos=new ListaProductos(per_ses);
-                        frmListaProductos.setVisible(true);
-                        this.dispose();
-                    }
-                }else if(per_ses.getTipo_usuario()==0){
-                    if(frmsuperAdmin==null){
-                        frmsuperAdmin=new InicioSuperAdmin(per_ses);
-                        frmsuperAdmin.setVisible(true);
-                        this.dispose();
-                    }
+            if (modSql.login(per_ses)) {
+                switch (per_ses.getTipo_usuario()) {
+                    case 1:
+                        if (frmInicioAdmin == null) {
+                            frmInicioAdmin = new InicioAdmin(per_ses);
+                            frmInicioAdmin.setVisible(true);
+                            this.dispose();
+                        }   break;
+                    case 2:
+                        if (frmListaProductos == null) {
+                            frmListaProductos = new ListaProductos(per_ses);
+                            frmListaProductos.setVisible(true);
+                            this.dispose();
+                        }   break;
+                    case 0:
+                        if (frmsuperAdmin == null) {
+                            frmsuperAdmin = new InicioSuperAdmin(per_ses);
+                            frmsuperAdmin.setVisible(true);
+                            this.dispose();
+                        }   break;
+                    default:
+                        break;
                 }
-           }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "mal");
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Ingrese todos los campos");
         }
     }//GEN-LAST:event_botonContinuarActionPerformed
 
+    private void botonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarActionPerformed
+        if (frmListaProductos == null) {
+            frmListaProductos = new ListaProductos();
+            frmListaProductos.setVisible(true);
+            this.dispose();
+    }//GEN-LAST:event_botonRegresarActionPerformed
+
     /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+         * @param args the command line arguments
+         */
+    public static void main(String args[]){
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

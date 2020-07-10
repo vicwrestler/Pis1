@@ -5,6 +5,7 @@
  */
 package Interfaces;
 
+import Clases.Persona_en_sesion;
 import Clases.quejas;
 import Model.SqlQuejas;
 import javax.swing.JOptionPane;
@@ -15,10 +16,18 @@ import javax.swing.JOptionPane;
  */
 public class FormularioQuejas extends javax.swing.JFrame {
 
+    Persona_en_sesion per_ses;
+    MostrarQuejasUsu frmMostrarQuejas;
+
     /**
      * Creates new form FormularioQuejas
      */
     public FormularioQuejas() {
+        initComponents();
+    }
+
+    public FormularioQuejas(Persona_en_sesion per) {
+        this.per_ses = per;
         initComponents();
     }
 
@@ -64,6 +73,11 @@ public class FormularioQuejas extends javax.swing.JFrame {
         });
 
         btnregresar.setText("Regresar");
+        btnregresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnregresarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,27 +136,37 @@ public class FormularioQuejas extends javax.swing.JFrame {
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
 
-        quejas mod=new quejas();
-        SqlQuejas modSql=new SqlQuejas();
-        if(!txttitulo.getText().equals("")){
-            if(!txtdescripcion.getText().equals("")){
+        quejas mod = new quejas();
+        SqlQuejas modSql = new SqlQuejas();
+        if (!txttitulo.getText().equals("")) {
+            if (!txtdescripcion.getText().equals("")) {
                 mod.setTitulo(txttitulo.getText());
                 mod.setDescripcion(txtdescripcion.getText());
-                mod.setId_usuario(2);
-                if(modSql.registrar(mod)){
+                mod.setId_usuario(per_ses.getId());
+                if (modSql.registrar(mod)) {
                     JOptionPane.showMessageDialog(null, "Tenemos tu queja, pronto la resolveremos");
-                    
-                    txttitulo.setText(null);
-                    txtdescripcion.setText(null);
-                    
+                    if (frmMostrarQuejas == null) {
+                        frmMostrarQuejas = new MostrarQuejasUsu(per_ses);
+                        frmMostrarQuejas.setVisible(true);
+                        this.dispose();
+                    }
+
                 }
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Ingresa un mensaje");
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Ingresa titulo");
         }
     }//GEN-LAST:event_btnEnviarActionPerformed
+
+    private void btnregresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregresarActionPerformed
+        if (frmMostrarQuejas == null) {
+            frmMostrarQuejas = new MostrarQuejas(per_ses);
+            frmMostrarQuejas.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnregresarActionPerformed
 
     /**
      * @param args the command line arguments

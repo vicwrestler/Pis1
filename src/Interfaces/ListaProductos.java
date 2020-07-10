@@ -8,23 +8,25 @@ package Interfaces;
 import Clases.Persona_en_sesion;
 import javax.swing.JOptionPane;
 
-
 /**
  *
  * @author w-res
  */
 public class ListaProductos extends javax.swing.JFrame {
+
     Persona_en_sesion per_ses;
     InformacionUsuario frminformacionUsuario;
     Login0 frmLogin0;
+
     /**
      * Creates new form ListaProductos
      */
     public ListaProductos() {
         initComponents();
     }
-    public ListaProductos(Persona_en_sesion per){
-        this.per_ses=per;
+
+    public ListaProductos(Persona_en_sesion per) {
+        this.per_ses = per;
         initComponents();
     }
 
@@ -81,20 +83,20 @@ public class ListaProductos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInfoUsuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfoUsuActionPerformed
-        if(per_ses==null){
+        if (per_ses == null) {
             JOptionPane.showMessageDialog(null, "Debe de ingresar a su cuenta");
-        }
-        if(frminformacionUsuario==null){
-            frminformacionUsuario=new InformacionUsuario(per_ses);
-            frminformacionUsuario.setVisible(true);
-            this.dispose();
-            
+        } else {
+            if (frminformacionUsuario == null) {
+                frminformacionUsuario = new InformacionUsuario(per_ses);
+                frminformacionUsuario.setVisible(true);
+                this.dispose();
+            }
         }
     }//GEN-LAST:event_btnInfoUsuActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        if(frmLogin0==null){
-            frmLogin0=new Login0();
+        if (frmLogin0 == null) {
+            frmLogin0 = new Login0();
             frmLogin0.setVisible(true);
             this.dispose();
         }

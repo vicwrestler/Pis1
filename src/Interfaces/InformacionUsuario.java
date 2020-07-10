@@ -27,6 +27,8 @@ public class InformacionUsuario extends javax.swing.JFrame {
     ListaProductos frmListaProductos;
     ActualizarDatosUsuario frmActualizarDatosUsuario;
     InicioSuperAdmin frmInicioSuperAdmin;
+    MostrarQuejas frmMostrarQuejas;
+    MostrarQuejasUsu frmMostrarQuejasUsu;
     /**
      * Creates new form InformacionUsuario
      */
@@ -92,6 +94,11 @@ public class InformacionUsuario extends javax.swing.JFrame {
         });
 
         btnQuejas.setText("Quejas");
+        btnQuejas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuejasActionPerformed(evt);
+            }
+        });
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -179,6 +186,23 @@ public class InformacionUsuario extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnQuejasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuejasActionPerformed
+        if(per_ses.getTipo_usuario()==1){
+            if(frmMostrarQuejas==null){
+            frmMostrarQuejas=new MostrarQuejas(per_ses);
+            frmMostrarQuejas.setVisible(true);
+            this.dispose();
+        }
+        }
+        if(per_ses.getTipo_usuario()==2){
+            if(frmMostrarQuejasUsu==null){
+                frmMostrarQuejasUsu=new MostrarQuejasUsu(per_ses);
+                frmMostrarQuejasUsu.setVisible(true);
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_btnQuejasActionPerformed
 
     /**
      * @param args the command line arguments

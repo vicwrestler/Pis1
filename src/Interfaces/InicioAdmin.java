@@ -6,32 +6,43 @@
 package Interfaces;
 
 import Clases.Persona_en_sesion;
-
-
+import Model.SqlUsuarios;
+import Utilerias.ImagenMySQL;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
  * @author danie
  */
 public class InicioAdmin extends javax.swing.JFrame {
- Persona_en_sesion per;
-Productos pro;
-MostrarQuejas que;
-ActualizarDatosUsuario ActDat=null;
+
+    Persona_en_sesion per;
+    Productos pro;
+    MostrarQuejas que;
+    ActualizarDatosUsuario ActDat = null;
     ListaProductos frmListaProductos;
+
     /**
      * Creates new form InicioAdmin
      */
     public InicioAdmin() {
-       // this.per=new persona();
-        //per.setNombre("Victor");
+
         initComponents();
     }
 
-    public InicioAdmin(Persona_en_sesion per){
-        this.per=per;
+    public InicioAdmin(Persona_en_sesion per) {
+        this.per = per;
         initComponents();
+        MuestraDatos();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,7 +58,10 @@ ActualizarDatosUsuario ActDat=null;
         btnQuejas = new javax.swing.JButton();
         botonEditInfo = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
-        informacionAdmin = new javax.swing.JTextField();
+        jpimg = new javax.swing.JPanel();
+        jlnombre = new javax.swing.JLabel();
+        jlapellido = new javax.swing.JLabel();
+        jlcorreo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -89,56 +103,82 @@ ActualizarDatosUsuario ActDat=null;
             }
         });
 
-        informacionAdmin.setText("Información admin");
-        informacionAdmin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                informacionAdminActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jpimgLayout = new javax.swing.GroupLayout(jpimg);
+        jpimg.setLayout(jpimgLayout);
+        jpimgLayout.setHorizontalGroup(
+            jpimgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jpimgLayout.setVerticalGroup(
+            jpimgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        jlnombre.setText("jLabel2");
+
+        jlapellido.setText("jLabel3");
+
+        jlcorreo.setText("jLabel2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnQuejas, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(informacionAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
-                    .addComponent(botonEditInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(14, 14, 14))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSalir)
                 .addGap(47, 47, 47))
             .addGroup(layout.createSequentialGroup()
-                .addGap(164, 164, 164)
-                .addComponent(jLabel1)
-                .addContainerGap(179, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnQuejas, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(164, 164, 164)
+                        .addComponent(jLabel1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jpimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jlapellido)
+                            .addComponent(jlnombre)
+                            .addComponent(jlcorreo))
+                        .addGap(61, 61, 61))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(botonEditInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(informacionAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(botonEditInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
                         .addGap(62, 62, 62)
                         .addComponent(btnProductos)
                         .addGap(18, 18, 18)
-                        .addComponent(btnUsuarios)))
-                .addGap(18, 18, 18)
-                .addComponent(btnQuejas)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                        .addComponent(btnUsuarios)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnQuejas))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jpimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jlnombre)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jlapellido)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jlcorreo)
+                        .addGap(15, 15, 15)
+                        .addComponent(botonEditInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addComponent(btnSalir)
                 .addGap(23, 23, 23))
         );
@@ -146,14 +186,10 @@ ActualizarDatosUsuario ActDat=null;
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void informacionAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_informacionAdminActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_informacionAdminActionPerformed
-
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
 
-        if(pro==null){
-            pro=new Productos(per);
+        if (pro == null) {
+            pro = new Productos(per);
             pro.setVisible(true);
             this.dispose();
         }
@@ -164,25 +200,25 @@ ActualizarDatosUsuario ActDat=null;
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnQuejasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuejasActionPerformed
-        if(que==null){
-            que=new MostrarQuejas(this.per);
+        if (que == null) {
+            que = new MostrarQuejas(this.per);
             que.setVisible(true);
             this.dispose();
-            
+
         }
     }//GEN-LAST:event_btnQuejasActionPerformed
 
     private void botonEditInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEditInfoActionPerformed
-        if(ActDat==null){
-            ActDat=new ActualizarDatosUsuario(this.per);
+        if (ActDat == null) {
+            ActDat = new ActualizarDatosUsuario(this.per);
             ActDat.setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_botonEditInfoActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        if(frmListaProductos==null){
-            frmListaProductos=new ListaProductos(per);
+        if (frmListaProductos == null) {
+            frmListaProductos = new ListaProductos(per);
             frmListaProductos.setVisible(true);
             this.dispose();
         }
@@ -229,7 +265,40 @@ ActualizarDatosUsuario ActDat=null;
     private javax.swing.JButton btnQuejas;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnUsuarios;
-    private javax.swing.JTextField informacionAdmin;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jlapellido;
+    private javax.swing.JLabel jlcorreo;
+    private javax.swing.JLabel jlnombre;
+    private javax.swing.JPanel jpimg;
     // End of variables declaration//GEN-END:variables
+
+    private void MuestraDatos() {
+        SqlUsuarios mdlsql = new SqlUsuarios();
+        BufferedImage buffimg = null;
+        byte[] image = null;
+        ResultSet rs = mdlsql.extraerUsuario(per.getId());
+        try {
+            if (rs.next()) {
+                image = rs.getBytes("imagen");
+                InputStream img = null;
+                img = rs.getBinaryStream(7);
+                try {
+                    buffimg = ImageIO.read(img);
+                    ImagenMySQL imagen = new ImagenMySQL(jpimg.getHeight(), jpimg.getWidth(), buffimg);
+                    jpimg.add(imagen);
+                    jpimg.repaint();
+
+                } catch (IOException ex) {
+                    System.err.println(ex);
+
+                }
+                jlnombre.setText(per.getNombre());
+                jlapellido.setText(per.getApellido());
+                jlcorreo.setText(per.getCorreo());
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InformacionUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 }

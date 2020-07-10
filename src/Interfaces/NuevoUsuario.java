@@ -17,15 +17,16 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-
 /**
  *
  * @author danie
  */
 public class NuevoUsuario extends javax.swing.JFrame {
-Login0 frmlogin;
-File fichero;
-String ruta;
+
+    Login0 frmlogin;
+    File fichero;
+    String ruta;
+
     /**
      * Creates new form NuevoUsuario
      */
@@ -202,23 +203,23 @@ String ruta;
 
     private void botonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarActionPerformed
 
-        if(frmlogin==null){
-            frmlogin=new Login0();
+        if (frmlogin == null) {
+            frmlogin = new Login0();
             frmlogin.setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_botonRegresarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        FileInputStream fis=null;
-        try {
-            SqlUsuarios modSql=new SqlUsuarios();
-            persona mod=new persona();
-            fis = new FileInputStream(fichero);
-            String pass=new String(txtContra.getPassword());
-            String confpass=new String(txtConfcontra.getPassword());
-            if(pass.equals(confpass)){
-                String newpass=hash.hash1(pass);
+        FileInputStream fis = null;
+        String pass = new String(txtContra.getPassword());
+        String confpass = new String(txtConfcontra.getPassword());
+        if (verificaDatos(pass, confpass) == true) {
+            try {
+                SqlUsuarios modSql = new SqlUsuarios();
+                persona mod = new persona();
+                fis = new FileInputStream(fichero);
+                String newpass = hash.hash1(pass);
                 mod.setNombre(txtnombre.getText());
                 mod.setApellido(txtapellido.getText());
                 mod.setTelefono(txttelefono.getText());
@@ -226,24 +227,28 @@ String ruta;
                 mod.setContraseña(newpass);
                 mod.setImagen((int) fichero.length());
                 mod.setTipo_usuario(2);
-                if(modSql.registrar(mod, fis)){
+                if (modSql.registrar(mod, fis)) {
                     JOptionPane.showMessageDialog(null, "Agregado");
-                }else{
+                    if (frmlogin == null) {
+                        frmlogin = new Login0();
+                        frmlogin.setVisible(true);
+                        this.dispose();
+                    }
+                } else {
                     JOptionPane.showMessageDialog(null, "error");
                 }
-                
-            }else{
-                JOptionPane.showMessageDialog(null, "las contraseñas no son iguales");
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException ex) {
+
+            } catch (FileNotFoundException ex) {
                 Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    fis.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
+        
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtContraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContraActionPerformed
@@ -255,11 +260,11 @@ String ruta;
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int seleccion = fc.showOpenDialog(this);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
-             fichero = fc.getSelectedFile();
-             ruta = fichero.getAbsolutePath();
-        }else{
-        JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");
-        }   
+            fichero = fc.getSelectedFile();
+            ruta = fichero.getAbsolutePath();
+        } else {
+            JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");
+        }
     }//GEN-LAST:event_btnCargaimagenActionPerformed
 
     /**
@@ -279,13 +284,17 @@ String ruta;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NuevoUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NuevoUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NuevoUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NuevoUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NuevoUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NuevoUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NuevoUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NuevoUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -316,4 +325,32 @@ String ruta;
     private javax.swing.JTextField txtnombre;
     private javax.swing.JTextField txttelefono;
     // End of variables declaration//GEN-END:variables
+
+    private boolean verificaDatos(String pass, String confpass) {
+        if (txtnombre.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un nombre");
+            return false;
+        }
+        if (txtapellido.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un Apellido");
+            return false;
+        }
+        if (txtcorreo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un correo");
+            return false;
+        }
+        if (txttelefono.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un Telefono");
+            return false;
+        }
+        if (ruta == null || fichero == null) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar una imagen");
+            return false;
+        }
+        if (!pass.equals(confpass)) {
+            JOptionPane.showMessageDialog(null, "Deben de ser iguales las contraseñas");
+            return false;
+        }
+        return true;
+    }
 }

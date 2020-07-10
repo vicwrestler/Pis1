@@ -6,6 +6,7 @@
 package Interfaces;
 
 
+import Clases.Persona_en_sesion;
 import Clases.quejas;
 import Model.Conexion;
 import com.mysql.jdbc.Connection;
@@ -21,11 +22,19 @@ import javax.swing.JOptionPane;
 public class RespuestaQueja extends javax.swing.JFrame {
 
     quejas respQueja = MostrarQuejas.quejaResponder;
+    Persona_en_sesion per_ses;
     
     /**
      * Creates new form RespuestaQueja
      */
     public RespuestaQueja() {
+        initComponents();
+        
+        txtQueja.setText( respQueja.getDescripcion() );
+        
+    }
+    public RespuestaQueja(Persona_en_sesion per) {
+        this.per_ses=per;
         initComponents();
         
         txtQueja.setText( respQueja.getDescripcion() );
@@ -136,25 +145,28 @@ public class RespuestaQueja extends javax.swing.JFrame {
             
             Conexion objcon = new Conexion();
             Connection con = objcon.getConexion();
-            int Id_admin = respQueja.getId_admin();
-            //int Id_qj = respQueja.getId_queja();
+           // int Id_admin = respQueja.getId_admin();
+            //int Id_qj = respQueja.getId();
             
             try {
                 
-                String sql = "UPDATE Quejas SET Respuesta=?, Id_admin=?" + "WHERE Id_queja=?";
-                
+                //String sql = "UPDATE Quejas SET Respuesta=?, Id_admin=?" + "WHERE Id_queja=?";
+                String sql = "UPDATE Quejas SET Respuesta=?, Id_admin=? WHERE Titulo=? AND Descripcion=?";
                 PreparedStatement prest = null;
                 prest = con.prepareStatement(sql);
                 
                 prest.setString(1, txtRespuesta.getText());
-                prest.setString(2, (Id_admin + "") );
-                prest.setString(3, (Id_qj + "") );
+                prest.setInt(2, per_ses.getId());
+                //prest.setString(2, (String.valueOf(Id_admin)));
+                //prest.setString(3, (String.valueOf(Id_qj)));
+                prest.setString(3, respQueja.getTitulo());
+                prest.setString(4, respQueja.getDescripcion());
 
                 if (prest.executeUpdate() > 0)  {
                     
                     JOptionPane.showMessageDialog(null, "Respuesta enviada");
 
-                    MostrarQuejas mostQuejas = new MostrarQuejas();
+                    MostrarQuejas mostQuejas = new MostrarQuejas(per_ses);
         
                     //Hacemos visible la nueva interfaz
                     mostQuejas.setVisible(true);

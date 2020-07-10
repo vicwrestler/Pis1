@@ -5,44 +5,48 @@
  */
 package Interfaces;
 
-
 import Clases.Persona_en_sesion;
 import Clases.quejas;
+import Model.Conexion;
 import com.mysql.jdbc.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-
 /**
  *
  * @author feth
  */
 public class MostrarQuejas extends javax.swing.JFrame {
-    
+
     DefaultTableModel model;
     int Id_usuario;
     int Id_queja;
     protected static quejas quejaResponder;
     Persona_en_sesion per_ses;
+    RespuestaQueja respQueja;
+    InicioAdmin frmInicioAdmin;
+    InformacionUsuario frminformacionUsuario;
+    FormularioQuejas frmformularioQuejas;
 
     /**
      * Creates new form MostrarQuejas
      */
     public MostrarQuejas() {
         initComponents();
-        
+
         cargar();
-        
+
     }
+
     public MostrarQuejas(Persona_en_sesion per) {
-        this.per_ses=per;
+        this.per_ses = per;
         initComponents();
-        
+
         cargar();
-        
     }
 
     /**
@@ -59,9 +63,10 @@ public class MostrarQuejas extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaQuejas = new javax.swing.JTable();
         txtTitulo = new javax.swing.JTextField();
-        txtMensaje = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnResponder = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtMensaje = new javax.swing.JTextArea();
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel8.setText("Confirmación de pago");
@@ -89,44 +94,46 @@ public class MostrarQuejas extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tablaQuejas);
 
-        txtMensaje.addActionListener(new java.awt.event.ActionListener() {
+        btnResponder.setText("Responder");
+        btnResponder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMensajeActionPerformed(evt);
+                btnResponderActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Responder");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnRegresarActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Regresar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        txtMensaje.setColumns(20);
+        txtMensaje.setRows(5);
+        jScrollPane2.setViewportView(txtMensaje);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
-                    .addComponent(txtMensaje, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(58, 58, 58)
-                        .addComponent(jButton2)))
-                .addContainerGap())
+                        .addComponent(btnResponder))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(135, 135, 135)
+                                .addComponent(btnRegresar)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addGap(14, 14, 14))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(162, Short.MAX_VALUE)
@@ -136,15 +143,19 @@ public class MostrarQuejas extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRegresar)
+                        .addGap(18, 18, 18)))
+                .addComponent(btnResponder)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,56 +170,63 @@ public class MostrarQuejas extends javax.swing.JFrame {
 
     private void tablaQuejasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaQuejasMouseClicked
         // TODO add your handling code here:
-        
+
         //Limpiar
         txtTitulo.setText(null);
-        
+
         int set = tablaQuejas.getSelectedRow();
         txtTitulo.setText(tablaQuejas.getModel().getValueAt(set, 0).toString());
+        txtTitulo.setEditable(false);
         txtMensaje.setText(tablaQuejas.getModel().getValueAt(set, 1).toString());
-        Id_usuario = Integer.parseInt(tablaQuejas.getModel().getValueAt(set, 2).toString());
-        Id_queja = Integer.parseInt(tablaQuejas.getModel().getValueAt(set, 3).toString());
-        
+        txtMensaje.setEditable(false);
+        txtMensaje.setLineWrap(true);
+        // Id_usuario = Integer.parseInt(tablaQuejas.getModel().getValueAt(set, 2).toString());
+        //Id_queja = Integer.parseInt(tablaQuejas.getModel().getValueAt(set, 3).toString());
+
     }//GEN-LAST:event_tablaQuejasMouseClicked
 
-    private void txtMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMensajeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMensajeActionPerformed
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        System.out.println(frminformacionUsuario);
+        System.out.println(per_ses.getTipo_usuario());
+        if (per_ses.getTipo_usuario() == 1) {
+            if (frmInicioAdmin == null) {
+                frmInicioAdmin = new InicioAdmin(per_ses);
+                frmInicioAdmin.setVisible(true);
+                this.dispose();
+            }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        
-        if( txtTitulo.getText().length() == 0 || txtMensaje.getText().length() == 0 ) {
-            
-            JOptionPane.showMessageDialog( null, "Por favor, selecciona una queja" );
-            
         }
-        
-        else {
-            
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnResponderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResponderActionPerformed
+
+        if (txtTitulo.getText().length() == 0 || txtMensaje.getText().length() == 0) {
+
+            JOptionPane.showMessageDialog(null, "Por favor, selecciona una queja");
+
+        } else {
+
             quejaResponder = new quejas();
-            
-            quejaResponder.setTitulo( txtTitulo.getText() );
-            quejaResponder.setDescripcion( txtMensaje.getText() );
-            quejaResponder.setId_usuario(Id_usuario);
-            quejaResponder.setId_queja(Id_queja);
-            quejaResponder.setId_admin(8);
-            
-            RespuestaQueja respQueja = new RespuestaQueja();
-        
+
+            quejaResponder.setTitulo(txtTitulo.getText());
+            quejaResponder.setDescripcion(txtMensaje.getText());
+            //quejaResponder.setId_usuario(Id_usuario);
+            //quejaResponder.setId(Id_queja);
+            quejaResponder.setId_admin(per_ses.getId());
+
+            //if(respQueja==null){
+            respQueja = new RespuestaQueja(per_ses);
+
             //Hacemos visible la nueva interfaz
             respQueja.setVisible(true);
             //Cerramos la actual
             dispose();
-            
+            //}
+
         }
-   
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+
+
+    }//GEN-LAST:event_btnResponderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,53 +265,59 @@ public class MostrarQuejas extends javax.swing.JFrame {
     }
 
     public void cargar() {
-        
-        String[] titulos = {"Queja", "Mensaje", "ID del usuario", "ID de queja"};
-        String[] registros = new String [100];
-        
+
+        String[] titulos = {"Queja", "Mensaje", "Respondido"}; //"ID del usuario", "ID de queja"};
+        String[] registros = new String[100];
+
         String sql = "SELECT * FROM `Quejas`";
-        
+
         model = new DefaultTableModel(null, titulos);
-        
+
         //Conectar a base de datos
         Conexion cc = new Conexion();
         Connection conect = cc.getConexion();
-        
+
         try {
-            
+
             Statement st = (Statement) conect.createStatement();
             ResultSet rs = st.executeQuery(sql);
-            
-            while( rs.next() ) {
-                
+
+            while (rs.next()) {
+
                 registros[0] = rs.getString("Titulo");
                 registros[1] = rs.getString("Descripcion");
-                registros[2] = rs.getString("Id_usuario");
-                registros[3] = rs.getString("Id_Queja");
-                
+                if (rs.getString("Respuesta") == null) {
+                    registros[2] = "No contestado";
+                } else {
+                    registros[2] = "Contestado";
+                }
+
+                // registros[3] = rs.getString("Id_Queja");
                 model.addRow(registros);
-                
+                //System.out.println(registros[3]);
             }
-            
+
             tablaQuejas.setModel(model);
-            
-        } catch( SQLException ex) {
-            
-            JOptionPane.showMessageDialog( null, ex );
-            
+
+        } catch (SQLException ex) {
+
+            JOptionPane.showMessageDialog(null, ex);
+
         }
-        
-        
+
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton btnResponder;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tablaQuejas;
-    private javax.swing.JTextField txtMensaje;
+    private javax.swing.JTextArea txtMensaje;
     private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
+
+    
 }
