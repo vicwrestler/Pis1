@@ -5,7 +5,6 @@
  */
 package Interfaces;
 
-
 import Clases.Persona_en_sesion;
 import Clases.persona;
 import Model.SqlUsuarios;
@@ -26,11 +25,13 @@ import javax.swing.table.DefaultTableModel;
  * @author w-res
  */
 public class ActulizarAdmins extends javax.swing.JFrame {
-File fichero;
-String ruta;
-Administradores frmAdministradores;
-String contraseña;
+
+    File fichero;
+    String ruta;
+    Administradores frmAdministradores;
+    String contraseña;
     Persona_en_sesion per_ses;
+
     /**
      * Creates new form ActulizarAdmins
      */
@@ -38,8 +39,9 @@ String contraseña;
         initComponents();
         Llenatabla();
     }
-    public ActulizarAdmins(Persona_en_sesion per){
-        this.per_ses=per;
+
+    public ActulizarAdmins(Persona_en_sesion per) {
+        this.per_ses = per;
         initComponents();
         Llenatabla();
     }
@@ -202,23 +204,37 @@ String contraseña;
         FileInputStream fis = null;
         SqlUsuarios mdlsql = new SqlUsuarios();
         persona per = new persona();
-    try {
-        fis= new FileInputStream(fichero);
-        per.setNombre(txtNombre.getText());
-        per.setApellido(txtApellido.getText());
-        per.setCorreo(txtCorreo.getText());
-        per.setTelefono(txtTelefono.getText());
-        per.setImagen((int) fichero.length());
-        per.setContraseña(contraseña);
-        if(mdlsql.actualizar(per, fis, txtCorreo.getText())){
-            JOptionPane.showMessageDialog(null, "Actualizado");
-            Llenatabla();
+        if (verificarDatos() == true) {
+            try {
+                if (fichero == null) {
+                    per.setNombre(txtNombre.getText());
+                    per.setApellido(txtApellido.getText());
+                    per.setCorreo(txtCorreo.getText());
+                    per.setTelefono(txtTelefono.getText());
+                    per.setContraseña(contraseña);
+                    if (mdlsql.actualizar(per, txtCorreo.getText())) {
+                        JOptionPane.showMessageDialog(null, "Actualizado");
+                        Llenatabla();
+                        limpiatabla();
+                    }
+                } else {
+                    fis = new FileInputStream(fichero);
+                    per.setNombre(txtNombre.getText());
+                    per.setApellido(txtApellido.getText());
+                    per.setCorreo(txtCorreo.getText());
+                    per.setTelefono(txtTelefono.getText());
+                    per.setContraseña(contraseña);
+                    per.setImagen((int) fichero.length());
+                    if (mdlsql.actualizar(per, fis, txtCorreo.getText())) {
+                        JOptionPane.showMessageDialog(null, "Actualizado");
+                        Llenatabla();
+                        limpiatabla();
+                    }
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ActulizarAdmins.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-    } catch (FileNotFoundException ex) {
-        Logger.getLogger(ActulizarAdmins.class.getName()).log(Level.SEVERE, null, ex);
-    }
-        
-        
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void txtApellidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidoActionPerformed
@@ -226,21 +242,21 @@ String contraseña;
     }//GEN-LAST:event_txtApellidoActionPerformed
 
     private void jtAdminsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtAdminsMouseClicked
-        SqlUsuarios mdlsql=new SqlUsuarios();
-        
+        SqlUsuarios mdlsql = new SqlUsuarios();
+
         try {
             int fila = jtAdmins.getSelectedRow();
-            
+
             String correo = jtAdmins.getValueAt(fila, 3).toString();
             ResultSet rs;
-            rs=mdlsql.extraerAdmin(correo);
-            
-            if(rs.next()) {
+            rs = mdlsql.extraerAdmin(correo);
+
+            if (rs.next()) {
                 txtNombre.setText(rs.getString("Nombre_s"));
                 txtApellido.setText(rs.getString("Apellido_s"));
                 txtTelefono.setText(rs.getString("Telefono"));
                 txtCorreo.setText(rs.getString("Correo"));
-                contraseña=rs.getString("Contraseña");
+                contraseña = rs.getString("Contraseña");
             }
         } catch (SQLException ex) {
             System.err.println(ex.toString());
@@ -252,15 +268,16 @@ String contraseña;
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int seleccion = fc.showOpenDialog(this);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
-             fichero = fc.getSelectedFile();
-             ruta = fichero.getAbsolutePath();
-        }else{
-        JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");}
+            fichero = fc.getSelectedFile();
+            ruta = fichero.getAbsolutePath();
+        } else {
+            JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");
+        }
     }//GEN-LAST:event_btnCargaimgActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        if(frmAdministradores==null){
-            frmAdministradores=new Administradores(per_ses);
+        if (frmAdministradores == null) {
+            frmAdministradores = new Administradores(per_ses);
             frmAdministradores.setVisible(true);
             this.dispose();
         }
@@ -320,12 +337,12 @@ String contraseña;
     // End of variables declaration//GEN-END:variables
 
     private void Llenatabla() {
-        
-        SqlUsuarios mdlSql=new SqlUsuarios();
+
+        SqlUsuarios mdlSql = new SqlUsuarios();
         try {
             DefaultTableModel modelo = new DefaultTableModel();
             jtAdmins.setModel(modelo);
-            
+
             ResultSet rs;
             rs = mdlSql.extraerAdmins();
             ResultSetMetaData rsMD = rs.getMetaData();
@@ -336,22 +353,51 @@ String contraseña;
             modelo.addColumn("Telefono");
             modelo.addColumn("Correo");
             modelo.addColumn("Foto");
-            
-            
-            //int[] tamaños=nes int[];
 
+            //int[] tamaños=nes int[];
             while (rs.next()) {
                 Object[] filas = new Object[cantidadCol];
                 for (int i = 0; i < cantidadCol; i++) {
                     filas[i] = rs.getObject(i + 1);
                 }
                 modelo.addRow(filas);
-                
+
             }
 
         } catch (SQLException ex) {
             System.err.println(ex.toString());
         }
-    
+
+    }
+
+    private boolean verificarDatos() {
+        if (txtNombre.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un nombre");
+            return false;
+        }
+        if (txtApellido.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un Apellido");
+            return false;
+        }
+        if (txtCorreo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un correo");
+            return false;
+        }
+        if (txtTelefono.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un Telefono");
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private void limpiatabla() {
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtCorreo.setText("");
+        txtTelefono.setText("");
+        ruta=null;
+        fichero=null;
     }
 }

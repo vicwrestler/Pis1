@@ -75,6 +75,11 @@ public class RespuestaQueja extends javax.swing.JFrame {
         jLabel3.setText("Respuesta:");
 
         BotonRegresar.setText("Regresar");
+        BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonRegresarActionPerformed(evt);
+            }
+        });
 
         BotonEnviar.setText("Enviar");
         BotonEnviar.addActionListener(new java.awt.event.ActionListener() {
@@ -211,6 +216,12 @@ public class RespuestaQueja extends javax.swing.JFrame {
         txtQueja.setText( respQueja.getDescripcion() );
         
     }//GEN-LAST:event_txtQuejaActionPerformed
+
+    private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
+        MostrarQuejas frmRegreso=new MostrarQuejas(per_ses);
+        frmRegreso.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_BotonRegresarActionPerformed
 
     /**
      * @param args the command line arguments

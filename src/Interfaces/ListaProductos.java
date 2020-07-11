@@ -6,7 +6,23 @@
 package Interfaces;
 
 import Clases.Persona_en_sesion;
+import Model.SqlProducto;
+import Utilerias.ImagenMySQL;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -23,11 +39,13 @@ public class ListaProductos extends javax.swing.JFrame {
      */
     public ListaProductos() {
         initComponents();
+        llenapanel();
     }
 
     public ListaProductos(Persona_en_sesion per) {
         this.per_ses = per;
         initComponents();
+        llenapanel();
     }
 
     /**
@@ -41,6 +59,8 @@ public class ListaProductos extends javax.swing.JFrame {
 
         btnInfoUsu = new javax.swing.JButton();
         btnIngresar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,25 +78,35 @@ public class ListaProductos extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setLayout(new java.awt.GridLayout(0, 5));
+        jScrollPane1.setViewportView(jPanel1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(btnIngresar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
-                .addComponent(btnInfoUsu)
-                .addGap(140, 140, 140))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(btnIngresar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 571, Short.MAX_VALUE)
+                        .addComponent(btnInfoUsu)))
+                .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnInfoUsu)
-                    .addComponent(btnIngresar))
-                .addContainerGap(348, Short.MAX_VALUE))
+                    .addComponent(btnIngresar)
+                    .addComponent(btnInfoUsu))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -141,5 +171,65 @@ public class ListaProductos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInfoUsu;
     private javax.swing.JButton btnIngresar;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    private void llenapanel() {
+        SqlProducto mdlsql = new SqlProducto();
+        BufferedImage buffimg = null;
+        byte[] image = null;
+        try {
+            ResultSet rs;
+            rs = mdlsql.extraeralmacen();
+            ResultSetMetaData rsMD = rs.getMetaData();
+            int cantidadCol = rsMD.getColumnCount();
+            while (rs.next()) {
+                
+                JLabel titulo=new JLabel(rs.getString("Titulo"));
+                JTextArea descripcion=new JTextArea(rs.getString("Descripcion"));
+                descripcion.setLineWrap(true);
+                JLabel costo=new JLabel(rs.getInt("Costo")+"");
+                image = rs.getBytes("Foto");
+                //JPanel jpImg=new JPanel();
+                JLabel jpImg=new JLabel();
+                jpImg.setPreferredSize(new Dimension(150, 150));
+                InputStream img = null;
+                img = rs.getBinaryStream("Foto");
+                try {
+                    buffimg = ImageIO.read(img);
+                    ImagenMySQL imagen = new ImagenMySQL(jpImg.getHeight(), jpImg.getWidth(), buffimg);
+                    //jpImg.setIcon(img.);
+                    jpImg.add(imagen);
+                    jpImg.repaint();
+
+                } catch (IOException ex) {
+                    System.err.println(ex);
+                    
+                }
+                
+                JButton boton=new JButton("Agregar al carrito");
+                boton.setName(String.valueOf(rs.getInt("Id_Producto")));
+                boton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        AgregartoCarr(boton.getName());
+                    }
+
+                    
+                });
+                jPanel1.add(jpImg);
+                jPanel1.add(titulo);
+                jPanel1.add(descripcion);
+                jPanel1.add(costo);
+                jPanel1.add(boton);
+                jPanel1.updateUI();
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
+    }
+    private void AgregartoCarr(String name) {}
 }
+

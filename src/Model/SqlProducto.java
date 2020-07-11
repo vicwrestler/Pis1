@@ -87,6 +87,26 @@ public class SqlProducto {
         }
         return null;
     }
+    public ResultSet extraeralmacen(){
+            PreparedStatement ps;
+            ResultSet rs;
+            Conexion objcon=new Conexion();
+            Connection con=objcon.getConexion();
+            String sql = "SELECT alm.Id_Producto, alm.Titulo, alm.Descripcion, alm.Costo, alm.Categoria, alm.Cantidad, alm.Foto  \n" +
+            "FROM almacen AS alm";
+        
+        try {
+            ps=con.prepareStatement(sql);
+            rs=ps.executeQuery();
+            if(rs!=null){
+                return rs;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlProducto.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        return null;
+    }
     public ResultSet extraerProdalmacen(Persona_en_sesion per, String titulo){
             PreparedStatement ps;
             ResultSet rs;

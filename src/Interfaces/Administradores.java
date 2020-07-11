@@ -23,7 +23,7 @@ public class Administradores extends javax.swing.JFrame {
     Persona_en_sesion per_ses;
     NuevoAdmin frmnueNuevoAdmin;
     ActulizarAdmins frmActulizarAdmins;
-    persona per=new persona();
+    persona per;
     InicioSuperAdmin frmInicioSuperAdmin;
     /**
      * Creates new form Administradores
@@ -206,6 +206,7 @@ public class Administradores extends javax.swing.JFrame {
             rs=modsql.extraerAdmin(correo);
             
             if(rs.next()) {
+                per=new persona();
                 per.setId(rs.getInt("Id_Persona")); 
                 System.out.println(per.getId());
             }
@@ -216,12 +217,17 @@ public class Administradores extends javax.swing.JFrame {
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         SqlUsuarios mdlsql=new SqlUsuarios();
-        if(!mdlsql.eliminar(per.getId())){
+        if(per==null){
+            JOptionPane.showMessageDialog(null, "Seleccione algun registro de la tabla");
+        }else{
+            if(!mdlsql.eliminar(per.getId())){
             JOptionPane.showMessageDialog(null, "Administrador eliminado");
             Llenatabla();
         }else{
             JOptionPane.showMessageDialog(null, "No se pudo eliminar");
         }
+        }
+        
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**

@@ -7,25 +7,53 @@ package Clases;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  *
  * @author w-res
  */
 public class prueba {
-    JLabel etiqueta;
+    JLabel titulo;
+    JTextArea descripcion;
+    JLabel costo;
+    JPanel img;
     JButton boton;
-    public prueba(String texto){
-        etiqueta= new JLabel(texto);
-        boton=new JButton("Agrega");
+    
+    public prueba(){
     }
 
-    public JLabel getEtiqueta() {
-        return etiqueta;
+    public JLabel getTitulo() {
+        return titulo;
     }
 
-    public void setEtiqueta(JLabel etiqueta) {
-        this.etiqueta = etiqueta;
+    public void setTitulo(JLabel titulo) {
+        this.titulo = titulo;
+    }
+
+    public JTextArea getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(JTextArea descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public JLabel getCosto() {
+        return costo;
+    }
+
+    public void setCosto(JLabel costo) {
+        this.costo = costo;
+    }
+
+    public JPanel getImg() {
+        return img;
+    }
+
+    public void setImg(JPanel img) {
+        this.img = img;
     }
 
     public JButton getBoton() {
@@ -35,5 +63,6 @@ public class prueba {
     public void setBoton(JButton boton) {
         this.boton = boton;
     }
+    
     
 }

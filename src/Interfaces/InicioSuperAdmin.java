@@ -30,7 +30,7 @@ Persona_en_sesion per_ses;
 InformacionUsuario frminformacionUsuario;
     ListaProductos frmListaProductos;
     Administradores frmAdministradores;
-    
+    MostrarUsuarios frmMostrarUsuarios;
     /** Creates new form InicioSuperAdmin */
     public InicioSuperAdmin() {
         initComponents();
@@ -110,6 +110,11 @@ InformacionUsuario frminformacionUsuario;
         });
 
         btnGestUsu.setText("Gestionar");
+        btnGestUsu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestUsuActionPerformed(evt);
+            }
+        });
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -258,6 +263,14 @@ InformacionUsuario frminformacionUsuario;
             this.dispose();
         }
     }//GEN-LAST:event_btnGestAdminActionPerformed
+
+    private void btnGestUsuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestUsuActionPerformed
+        if(frmMostrarUsuarios==null){
+            frmMostrarUsuarios=new MostrarUsuarios(per_ses);
+            frmMostrarUsuarios.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnGestUsuActionPerformed
 
     /**
      * @param args the command line arguments

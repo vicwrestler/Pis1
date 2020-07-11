@@ -6,8 +6,21 @@
 package Interfaces;
 
 import Clases.prueba;
+import Model.SqlProducto;
+import Model.SqlUsuarios;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JLabel;
-
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,11 +28,16 @@ import javax.swing.JLabel;
  */
 public class Prueba extends javax.swing.JFrame {
 
+    RuntimePermission per_ses;
+    List<prueba> objetos;
+ 
     /**
      * Creates new form Prueba
      */
     public Prueba() {
         initComponents();
+        objetos=new ArrayList<>();
+        carga();
     }
 
     /**
@@ -44,7 +62,7 @@ public class Prueba extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.setLayout(new java.awt.GridLayout(0, 4));
+        jPanel1.setLayout(new java.awt.GridLayout(0, 4, 1, 1));
         jScrollPane1.setViewportView(jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -73,13 +91,13 @@ public class Prueba extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-int conteo=0;
+int conteo = 0;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        prueba nuevo=new prueba(String.valueOf(conteo));
+        /*prueba nuevo=new prueba(String.valueOf(conteo));
         jPanel1.add(nuevo.getEtiqueta());
         jPanel1.add(nuevo.getBoton());
         conteo++;
-        jPanel1.updateUI();
+        jPanel1.updateUI();*/
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -123,4 +141,55 @@ int conteo=0;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+
+    private void carga() {
+        SqlProducto mdlsql = new SqlProducto();
+        try {
+            //DefaultTableModel modelo = new DefaultTableModel();
+            //jtAdmin.setModel(modelo);
+            ResultSet rs;
+            rs = mdlsql.extraeralmacen();
+            ResultSetMetaData rsMD = rs.getMetaData();
+            int cantidadCol = rsMD.getColumnCount();
+
+            /*modelo.addColumn("Nombre");
+            modelo.addColumn("Apellido");
+            modelo.addColumn("Telefono");
+            modelo.addColumn("Correo");
+            modelo.addColumn("Foto");*/
+            //int[] tamaños=nes int[];
+            while (rs.next()) {
+                //prueba pru = new prueba();
+                
+                JLabel titulo=new JLabel(rs.getString("Titulo"));
+                JTextArea descripcion=new JTextArea(rs.getString("Descripcion"));
+                descripcion.setLineWrap(true);
+                JLabel costo=new JLabel(rs.getInt("Costo")+"");
+                //JPanel img=;
+                JButton boton=new JButton("Agregar al carrito");
+                boton.setName(String.valueOf(rs.getInt("Id_Producto")));
+                boton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        AgregartoCarr(per_ses.getName());
+                    }
+                });
+                jPanel1.add(titulo);
+                jPanel1.add(descripcion);
+                jPanel1.add(costo);
+                jPanel1.add(boton);
+                jPanel1.updateUI();
+                /*Object[] filas = new Object[cantidadCol];
+                for (int i = 0; i < cantidadCol; i++) {
+                    filas[i] = rs.getObject(i + 1);
+                }
+                modelo.addRow(filas);*/
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
+    }
 }

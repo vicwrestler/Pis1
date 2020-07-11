@@ -162,7 +162,7 @@ public class FormularioQuejas extends javax.swing.JFrame {
 
     private void btnregresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregresarActionPerformed
         if (frmMostrarQuejas == null) {
-            frmMostrarQuejas = new MostrarQuejas(per_ses);
+            frmMostrarQuejas = new MostrarQuejasUsu(per_ses);
             frmMostrarQuejas.setVisible(true);
             this.dispose();
         }

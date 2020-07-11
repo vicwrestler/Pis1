@@ -66,6 +66,29 @@ public class SqlUsuarios extends Conexion {
             return false;
         }
     }
+    public boolean actualizar(persona per, String correoact) {
+        PreparedStatement ps;
+        Connection con = getConexion();
+        String sql = "UPDATE personas SET Nombre_s=?,Apellido_s=?,"
+                + "Telefono=?,Correo=?,Contraseña=? WHERE Correo=?";
+        //String sql = "INSERT INTO personas (Nombre_s, Apellido_s, Telefono, Correo, Contraseña, Imagen, tipo_usuario)"
+        //      + " VALUES(?, ?, ?, ?, ?, ?, ?)";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, per.getNombre());
+            ps.setString(2, per.getApellido());
+            ps.setString(3, per.getTelefono());
+            ps.setString(4, per.getCorreo());
+            ps.setString(5, per.getContraseña());
+           
+            ps.setString(6, correoact);
+            ps.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
 
     public boolean login(Persona_en_sesion per) {
         Persona_en_sesion per_ses;
@@ -171,6 +194,23 @@ public class SqlUsuarios extends Conexion {
         try {
             ps=con.prepareStatement(sql);
             ps.setInt(1, id);
+            if(ps.execute()!=false){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return false;
+    }
+    public boolean eliminar(String correo){
+        PreparedStatement ps;
+        Conexion objcon=new Conexion();
+        Connection con=objcon.getConexion();
+        String sql="DELETE FROM Personas WHERE Correo=?";
+        try {
+            ps=con.prepareStatement(sql);
+            ps.setString(1, correo);
             if(ps.execute()!=false){
                 return true;
             }

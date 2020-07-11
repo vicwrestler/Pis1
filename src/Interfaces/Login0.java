@@ -185,7 +185,7 @@ public class Login0 extends javax.swing.JFrame {
                         break;
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "mal");
+                JOptionPane.showMessageDialog(null, "No se encuentra el usuario");
             }
         } else {
             JOptionPane.showMessageDialog(null, "Ingrese todos los campos");

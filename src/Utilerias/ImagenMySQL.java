@@ -26,6 +26,8 @@ public class ImagenMySQL extends javax.swing.JPanel{
         //ImageIcon img=new ImageIcon(getClass().getResource(ruta));
         BufferedImage img=ruta;
         g.drawImage(img, 0, 0, height.width, height.height, null);
+        //g.drawImage(img, 0, 0, 300, 300, null)
+        //g.drawImage(img, 0, 0, 150, 150, null);
         setOpaque(false);
         super.paintComponent(g);
     }

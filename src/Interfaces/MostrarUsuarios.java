@@ -5,17 +5,40 @@
  */
 package Interfaces;
 
+import Clases.Persona_en_sesion;
+import Clases.persona;
+import Model.Conexion;
+import Model.SqlUsuarios;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author danie
  */
 public class MostrarUsuarios extends javax.swing.JFrame {
 
+    InicioAdmin frmInicioAdmin;
+    Persona_en_sesion per_ses;
+    persona perelim;
+    InicioSuperAdmin frmInicioSuperAdmin;
+
     /**
      * Creates new form MostrarUsuarios
      */
     public MostrarUsuarios() {
         initComponents();
+    }
+
+    public MostrarUsuarios(Persona_en_sesion per) {
+        this.per_ses = per;
+        initComponents();
+        carga();
     }
 
     /**
@@ -33,7 +56,7 @@ public class MostrarUsuarios extends javax.swing.JFrame {
         BotonRegresar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        Usuarios = new javax.swing.JTable();
+        jtUsuarios = new javax.swing.JTable();
         BotonEliminar1 = new javax.swing.JButton();
         BotonRegresar1 = new javax.swing.JButton();
 
@@ -59,7 +82,7 @@ public class MostrarUsuarios extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Mostrar usuarios");
 
-        Usuarios.setModel(new javax.swing.table.DefaultTableModel(
+        jtUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -70,11 +93,26 @@ public class MostrarUsuarios extends javax.swing.JFrame {
                 "Nombre", "Apellido", "Correo"
             }
         ));
-        jScrollPane2.setViewportView(Usuarios);
+        jtUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtUsuariosMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jtUsuarios);
 
         BotonEliminar1.setText("Eliminar");
+        BotonEliminar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonEliminar1ActionPerformed(evt);
+            }
+        });
 
         BotonRegresar1.setText("Regresar");
+        BotonRegresar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonRegresar1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,8 +124,8 @@ public class MostrarUsuarios extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BotonEliminar1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BotonRegresar1))
@@ -100,19 +138,57 @@ public class MostrarUsuarios extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(52, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 229, Short.MAX_VALUE)
                         .addComponent(BotonEliminar1)
                         .addGap(18, 18, 18)
                         .addComponent(BotonRegresar1)
-                        .addGap(33, 33, 33))))
+                        .addGap(33, 33, 33))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BotonRegresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresar1ActionPerformed
+        if (per_ses.getTipo_usuario() == 0) {
+            frmInicioSuperAdmin = new InicioSuperAdmin(per_ses);
+            frmInicioSuperAdmin.setVisible(true);
+            this.dispose();
+        }
+        if (per_ses.getTipo_usuario() == 1) {
+            if (frmInicioAdmin == null) {
+                frmInicioAdmin = new InicioAdmin(per_ses);
+                frmInicioAdmin.setVisible(true);
+                this.dispose();
+            }
+        }
+
+    }//GEN-LAST:event_BotonRegresar1ActionPerformed
+
+    private void jtUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtUsuariosMouseClicked
+        perelim = new persona();
+        int fila = jtUsuarios.getSelectedRow();
+        String correo = jtUsuarios.getValueAt(fila, 3).toString();
+        perelim.setCorreo(correo);
+    }//GEN-LAST:event_jtUsuariosMouseClicked
+
+    private void BotonEliminar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminar1ActionPerformed
+        SqlUsuarios mdlUsu = new SqlUsuarios();
+        if (perelim != null) {
+            if (!mdlUsu.eliminar(perelim.getCorreo())) {
+                JOptionPane.showMessageDialog(null, "Eliminado");
+                carga();
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al eliminar");
+                carga();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione un registro");
+        }
+    }//GEN-LAST:event_BotonEliminar1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,9 +232,38 @@ public class MostrarUsuarios extends javax.swing.JFrame {
     private javax.swing.JButton BotonEliminar1;
     private javax.swing.JButton BotonRegresar;
     private javax.swing.JButton BotonRegresar1;
-    private javax.swing.JTable Usuarios;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jtUsuarios;
     // End of variables declaration//GEN-END:variables
+
+    private void carga() {
+        SqlUsuarios mdlsql = new SqlUsuarios();
+        try {
+            DefaultTableModel modelo = new DefaultTableModel();
+            jtUsuarios.setModel(modelo);
+            ResultSet rs;
+            rs = mdlsql.extraerUsuarios();
+            ResultSetMetaData rsMD = rs.getMetaData();
+            int cantidadCol = rsMD.getColumnCount();
+
+            modelo.addColumn("Nombre");
+            modelo.addColumn("Apellido");
+            modelo.addColumn("Telefono");
+            modelo.addColumn("Correo");
+            modelo.addColumn("Foto");
+            while (rs.next()) {
+                Object[] filas = new Object[cantidadCol];
+                for (int i = 0; i < cantidadCol; i++) {
+                    filas[i] = rs.getObject(i + 1);
+                }
+                modelo.addRow(filas);
+
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
+    }
 }

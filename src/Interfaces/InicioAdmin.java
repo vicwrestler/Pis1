@@ -28,6 +28,7 @@ public class InicioAdmin extends javax.swing.JFrame {
     MostrarQuejas que;
     ActualizarDatosUsuario ActDat = null;
     ListaProductos frmListaProductos;
+    MostrarUsuarios frmMostrarUsuarios;
 
     /**
      * Creates new form InicioAdmin
@@ -196,7 +197,11 @@ public class InicioAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
-        // TODO add your handling code here:
+        if(frmMostrarUsuarios==null){
+            frmMostrarUsuarios=new MostrarUsuarios(per);
+            frmMostrarUsuarios.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnQuejasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuejasActionPerformed

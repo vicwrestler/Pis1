@@ -5,7 +5,6 @@
  */
 package Interfaces;
 
-
 import Clases.Persona_en_sesion;
 import Clases.persona;
 import Model.SqlUsuarios;
@@ -19,26 +18,29 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-
 /**
  *
  * @author danie
  */
 public class NuevoAdmin extends javax.swing.JFrame {
-File fichero;
-String ruta;
+
+    File fichero;
+    String ruta;
     Administradores frmAdministradores;
     Persona_en_sesion per_ses;
+
     /**
      * Creates new form NuevoAdmin
      */
     public NuevoAdmin() {
         initComponents();
     }
-public NuevoAdmin(Persona_en_sesion per) {
-    this.per_ses=per;
-    initComponents();
+
+    public NuevoAdmin(Persona_en_sesion per) {
+        this.per_ses = per;
+        initComponents();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -200,15 +202,16 @@ public NuevoAdmin(Persona_en_sesion per) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarActionPerformed
-        FileInputStream fis=null;
-        try {
-            SqlUsuarios modSql=new SqlUsuarios();
-            persona mod=new persona();
-            fis = new FileInputStream(fichero);
-            String pass=new String(txtContra.getPassword());
-            String confpass=new String(txtConfContra.getPassword());
-            if(pass.equals(confpass)){
-                String newpass=hash.hash1(pass);
+        FileInputStream fis = null;
+        String pass = new String(txtContra.getPassword());
+        String confpass = new String(txtConfContra.getPassword());
+        if (verificaDatos(pass, confpass) == true) {
+            try {
+                SqlUsuarios modSql = new SqlUsuarios();
+                persona mod = new persona();
+                fis = new FileInputStream(fichero);
+
+                String newpass = hash.hash1(pass);
                 mod.setNombre(txtnombre.getText());
                 mod.setApellido(txtapellido.getText());
                 mod.setTelefono(txttelefono.getText());
@@ -216,22 +219,24 @@ public NuevoAdmin(Persona_en_sesion per) {
                 mod.setContraseña(newpass);
                 mod.setImagen((int) fichero.length());
                 mod.setTipo_usuario(1);
-                if(modSql.registrar(mod, fis)){
+                if (modSql.registrar(mod, fis)) {
                     JOptionPane.showMessageDialog(null, "Agregado");
-                }else{
-                    JOptionPane.showMessageDialog(null, "error");
+                    if (frmAdministradores == null) {
+                        frmAdministradores = new Administradores(per_ses);
+                        frmAdministradores.setVisible(true);
+                        this.dispose();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al agregar");
                 }
-                
-            }else{
-                JOptionPane.showMessageDialog(null, "las contraseñas no son iguales");
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException ex) {
+            } catch (FileNotFoundException ex) {
                 Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    fis.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }//GEN-LAST:event_botonRegistrarActionPerformed
@@ -241,16 +246,16 @@ public NuevoAdmin(Persona_en_sesion per) {
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int seleccion = fc.showOpenDialog(this);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
-             fichero = fc.getSelectedFile();
-             ruta = fichero.getAbsolutePath();
-        }else{
-        JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");
-        }   
+            fichero = fc.getSelectedFile();
+            ruta = fichero.getAbsolutePath();
+        } else {
+            JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");
+        }
     }//GEN-LAST:event_btnCargaimagenActionPerformed
 
     private void botonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarActionPerformed
-        if(frmAdministradores==null){
-            frmAdministradores=new Administradores(per_ses);
+        if (frmAdministradores == null) {
+            frmAdministradores = new Administradores(per_ses);
             frmAdministradores.setVisible(true);
             this.dispose();
         }
@@ -310,4 +315,31 @@ public NuevoAdmin(Persona_en_sesion per) {
     private javax.swing.JTextField txtnombre;
     private javax.swing.JTextField txttelefono;
     // End of variables declaration//GEN-END:variables
+ private boolean verificaDatos(String pass, String confpass) {
+        if (txtnombre.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un nombre");
+            return false;
+        }
+        if (txtapellido.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un Apellido");
+            return false;
+        }
+        if (txtcorreo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un correo");
+            return false;
+        }
+        if (txttelefono.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar un Telefono");
+            return false;
+        }
+        if (ruta == null || fichero == null) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar una imagen");
+            return false;
+        }
+        if (!pass.equals(confpass)) {
+            JOptionPane.showMessageDialog(null, "Deben de ser iguales las contraseñas");
+            return false;
+        }
+        return true;
+    }
 }
