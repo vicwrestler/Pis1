@@ -5,16 +5,24 @@
  */
 package Interfaces;
 
+import Clases.TablaImagen;
 import Clases.prueba;
 import Model.SqlProducto;
 import Model.SqlUsuarios;
+import Utilerias.ImagenMySQL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,13 +38,13 @@ public class Prueba extends javax.swing.JFrame {
 
     RuntimePermission per_ses;
     List<prueba> objetos;
- 
+
     /**
      * Creates new form Prueba
      */
     public Prueba() {
         initComponents();
-        objetos=new ArrayList<>();
+        objetos = new ArrayList<>();
         carga();
     }
 
@@ -49,56 +57,52 @@ public class Prueba extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, true, true, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-
-        jPanel1.setLayout(new java.awt.GridLayout(0, 4, 1, 1));
-        jScrollPane1.setViewportView(jPanel1);
+        jScrollPane2.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addGap(41, 41, 41)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(165, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(38, 38, 38)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 int conteo = 0;
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        /*prueba nuevo=new prueba(String.valueOf(conteo));
-        jPanel1.add(nuevo.getEtiqueta());
-        jPanel1.add(nuevo.getBoton());
-        conteo++;
-        jPanel1.updateUI();*/
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,59 +141,79 @@ int conteo = 0;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 
-
     private void carga() {
-        SqlProducto mdlsql = new SqlProducto();
+        SqlUsuarios mdlSql = new SqlUsuarios();
+        BufferedImage buffimg = null;
+        byte[] image = null;
+
         try {
-            //DefaultTableModel modelo = new DefaultTableModel();
-            //jtAdmin.setModel(modelo);
+            DefaultTableModel modelo = new DefaultTableModel();
+            jTable1.setModel(modelo);
+
             ResultSet rs;
-            rs = mdlsql.extraeralmacen();
+            rs = mdlSql.extraerAdmins();
+            jTable1.setDefaultRenderer(Object.class, new TablaImagen());
             ResultSetMetaData rsMD = rs.getMetaData();
             int cantidadCol = rsMD.getColumnCount();
 
-            /*modelo.addColumn("Nombre");
+            modelo.addColumn("Nombre");
             modelo.addColumn("Apellido");
             modelo.addColumn("Telefono");
             modelo.addColumn("Correo");
-            modelo.addColumn("Foto");*/
+            modelo.addColumn("Foto");
+            modelo.addColumn("Agregar");
+
             //int[] tamaños=nes int[];
             while (rs.next()) {
-                //prueba pru = new prueba();
-                
-                JLabel titulo=new JLabel(rs.getString("Titulo"));
-                JTextArea descripcion=new JTextArea(rs.getString("Descripcion"));
-                descripcion.setLineWrap(true);
-                JLabel costo=new JLabel(rs.getInt("Costo")+"");
-                //JPanel img=;
-                JButton boton=new JButton("Agregar al carrito");
-                boton.setName(String.valueOf(rs.getInt("Id_Producto")));
+                Object[] filas = new Object[cantidadCol+1];
+                try {
+                    filas[0] = rs.getString("Nombre_s");
+                    filas[1] = rs.getString("Apellido_s");
+                    filas[2] = rs.getString("Telefono");
+                    filas[3] = rs.getString("Correo");
+                    JPanel jpImg = new JPanel();
+                    image = rs.getBytes("Imagen");
+                    InputStream img = null;
+                    img = rs.getBinaryStream(5);
+                    try {
+                        buffimg = ImageIO.read(img);
+                        ImagenMySQL imagen = new ImagenMySQL(jpImg.getHeight(), jpImg.getWidth(), buffimg);
+                        jpImg.add(imagen);
+                        jpImg.repaint();
+                        filas[4] = jpImg;
+
+                    } catch (IOException ex) {
+                        System.err.println(ex);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                JButton boton = new JButton("Agregar");
+                boton.setName(rs.getString("Nombre_s"));
                 boton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        //AgregartoCarr(per_ses.getName());
-                    }
+                        try {
+                            //AgregartoCarr(boton.getName());
+                            JOptionPane.showMessageDialog(null, rs.getString("Nombre_s"));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }    
                 });
-                jPanel1.add(titulo);
-                jPanel1.add(descripcion);
-                jPanel1.add(costo);
-                jPanel1.add(boton);
-                jPanel1.updateUI();
-                /*Object[] filas = new Object[cantidadCol];
-                for (int i = 0; i < cantidadCol; i++) {
-                    filas[i] = rs.getObject(i + 1);
-                }
-                modelo.addRow(filas);*/
+                filas[5] = boton;
+                modelo.addRow(filas);
+                
 
             }
-
-        } catch (SQLException ex) {
-            System.err.println(ex.toString());
+            jTable1.setModel(modelo);
+            jTable1.setRowHeight(64);
+        } catch (Exception e) {
         }
+
     }
 }

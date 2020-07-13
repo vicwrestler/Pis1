@@ -214,9 +214,7 @@ public class ListaProductos extends javax.swing.JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         AgregartoCarr(boton.getName());
-                    }
-
-                    
+                    }    
                 });
                 jPanel1.add(jpImg);
                 jPanel1.add(titulo);
