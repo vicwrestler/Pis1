@@ -6,6 +6,14 @@
 package Interfaces;
 
 import Clases.Persona_en_sesion;
+import Clases.producto;
+import Model.SqlProducto;
+import Model.SqlUsuarios;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 
@@ -19,16 +27,19 @@ public class Productos extends javax.swing.JFrame {
     InicioAdmin frmInicioAdmin;
     IngresarProducto frmIngresarProducto;
     ActualizarProductos frmActualizarProductos;
+    SqlProducto mdSqlProducto;
+    producto proelim;
     /**
      * Creates new form Productos
      */
     public Productos() {
         initComponents();
+        carga();
     }
     public Productos(Persona_en_sesion per){
         this.per=per;
         initComponents();
-        jLabel1.setText(per.getNombre());
+        carga();
     }
 
     /**
@@ -41,11 +52,12 @@ public class Productos extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton2 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         btnRegresar = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtProductos = new javax.swing.JTable();
 
         jButton2.setText("jButton2");
 
@@ -56,8 +68,6 @@ public class Productos extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-
-        jLabel1.setText("Hola mundo");
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -81,44 +91,61 @@ public class Productos extends javax.swing.JFrame {
         });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        jtProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jtProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtProductosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jtProductos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(121, 121, 121)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnActualizar, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnEliminar, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnAgregar)
-                            .addComponent(btnRegresar))))
-                .addGap(17, 17, 17))
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnRegresar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnActualizar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAgregar, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(41, 41, 41))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(46, 46, 46)
                 .addComponent(btnAgregar)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(btnActualizar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEliminar)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                .addGap(17, 17, 17)
+                .addComponent(btnActualizar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEliminar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnRegresar)
                 .addGap(20, 20, 20))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
@@ -156,6 +183,36 @@ public class Productos extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void jtProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtProductosMouseClicked
+         mdSqlProducto = new SqlProducto();
+         proelim=new producto();
+        try {
+            int fila = jtProductos.getSelectedRow();
+            String nombrefila = jtProductos.getValueAt(fila, 0).toString();
+            ResultSet rs;
+            rs = mdSqlProducto.extraerProdalmacen(per, nombrefila);
+            while (rs.next()) {
+                proelim.setTitulo(rs.getString("Titulo"));
+                proelim.setDescripcion(rs.getString("Descripcion"));
+                proelim.setCosto(rs.getInt("Costo"));
+                proelim.setCantidad(rs.getInt("Cantidad"));
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
+    }//GEN-LAST:event_jtProductosMouseClicked
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        if(proelim==null){
+            JOptionPane.showMessageDialog(null, "Seleccione un producto de la tabla");
+        }else{
+            if(mdSqlProducto.eliminar(proelim, per)==false){
+                JOptionPane.showMessageDialog(null, "Producto eliminado");
+                carga();
+            }
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,6 +256,63 @@ public class Productos extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jtProductos;
     // End of variables declaration//GEN-END:variables
+
+    private void carga() {
+        SqlProducto modsql = new SqlProducto();
+        try {
+            DefaultTableModel modelo = new DefaultTableModel();
+            jtProductos.setModel(modelo);
+            ResultSet rs;
+            rs = modsql.extraeralmacen(per);
+            ResultSetMetaData rsMD = rs.getMetaData();
+            int cantidadCol = rsMD.getColumnCount();
+
+            modelo.addColumn("Titulo");
+            modelo.addColumn("Descripcion");
+            modelo.addColumn("Costo");
+            modelo.addColumn("Categotia");
+            modelo.addColumn("Cantidad");
+            modelo.addColumn("foto");
+
+            //int[] tamaños=nes int[];
+            while (rs.next()) {
+                Object[] filas = new Object[cantidadCol];
+                for (int i = 0; i < cantidadCol; i++) {
+                    if(i==3){
+                        if(rs.getObject(i + 1).equals(0)){
+                            filas[i]="Audio";
+                        }
+                        if(rs.getObject(i + 1).equals(1)){
+                            filas[i]="Video";
+                        }
+                        if(rs.getObject(i + 1).equals(2)){
+                            filas[i]="Microcontrolador";
+                        }
+                        if(rs.getObject(i + 1).equals(3)){
+                            filas[i]="Optoelectronica";
+                        }
+                        if(rs.getObject(i + 1).equals(4)){
+                            filas[i]="Fuentes";
+                        }
+                        if(rs.getObject(i + 1).equals(5)){
+                            filas[i]="Sensores";
+                        }
+                        if(rs.getObject(i + 1).equals(6)){
+                            filas[i]="Robotica";
+                        }
+                    }else{
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    
+                }
+                modelo.addRow(filas);
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex.toString());
+        }
+}
 }

@@ -154,4 +154,25 @@ public class SqlProducto {
         }
         return null;
     }
+
+    public boolean eliminar(producto proelim, Persona_en_sesion per) {
+        PreparedStatement ps;
+        Conexion objcon=new Conexion();
+        Connection con=objcon.getConexion();
+        String sql="DELETE FROM almacen WHERE Titulo=? AND Descripcion=? AND Id_admin=? AND Costo=?";
+        try {
+            ps=con.prepareStatement(sql);
+            ps.setString(1, proelim.getTitulo());
+            ps.setString(2, proelim.getDescripcion());
+            ps.setInt(3, per.getId());
+            ps.setFloat(4, proelim.getCosto());
+            if(ps.execute()!=false){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return false;
+    }
 }

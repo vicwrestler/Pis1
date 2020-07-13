@@ -212,6 +212,7 @@ public class ActulizarAdmins extends javax.swing.JFrame {
         SqlUsuarios mdlsql = new SqlUsuarios();
         persona per = new persona();
         if (verificarDatos() == true&& mdlsql!=null) {
+            System.out.println(contraseña+"adentro actulizar");
             try {
                 if (fichero == null) {
                     per.setNombre(txtNombre.getText());
@@ -260,12 +261,13 @@ public class ActulizarAdmins extends javax.swing.JFrame {
             ResultSet rs;
             rs = mdlsql.extraerAdmin(correo);
 
-            if (rs.next()) {
+            while (rs.next()) {
                 txtNombre.setText(rs.getString("Nombre_s"));
                 txtApellido.setText(rs.getString("Apellido_s"));
                 txtTelefono.setText(rs.getString("Telefono"));
                 txtCorreo.setText(rs.getString("Correo"));
                 contraseña = rs.getString("Contraseña");
+                System.out.println(contraseña+"adentro tabla");
             }
         } catch (SQLException ex) {
             System.err.println(ex.toString());

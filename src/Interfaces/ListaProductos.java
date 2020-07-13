@@ -6,6 +6,8 @@
 package Interfaces;
 
 import Clases.Persona_en_sesion;
+import Clases.carrito;
+import Model.SqlCarrito;
 import Model.SqlProducto;
 import Utilerias.ImagenMySQL;
 import java.awt.Dimension;
@@ -33,13 +35,16 @@ public class ListaProductos extends javax.swing.JFrame {
     Persona_en_sesion per_ses;
     InformacionUsuario frminformacionUsuario;
     Login0 frmLogin0;
+    Carrito frmCarrito;
 
     /**
      * Creates new form ListaProductos
      */
     public ListaProductos() {
         initComponents();
+        per_ses = null;
         llenapanel();
+        
     }
 
     public ListaProductos(Persona_en_sesion per) {
@@ -61,8 +66,10 @@ public class ListaProductos extends javax.swing.JFrame {
         btnIngresar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
+        btnCarrito = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Inicio");
 
         btnInfoUsu.setText("Informacion de Usuario");
         btnInfoUsu.addActionListener(new java.awt.event.ActionListener() {
@@ -81,6 +88,13 @@ public class ListaProductos extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.GridLayout(0, 5));
         jScrollPane1.setViewportView(jPanel1);
 
+        btnCarrito.setText("Carrito");
+        btnCarrito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCarritoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -93,7 +107,9 @@ public class ListaProductos extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addComponent(btnIngresar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 571, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 474, Short.MAX_VALUE)
+                        .addComponent(btnCarrito)
+                        .addGap(32, 32, 32)
                         .addComponent(btnInfoUsu)))
                 .addGap(21, 21, 21))
         );
@@ -103,7 +119,8 @@ public class ListaProductos extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnIngresar)
-                    .addComponent(btnInfoUsu))
+                    .addComponent(btnInfoUsu)
+                    .addComponent(btnCarrito))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
                 .addContainerGap())
@@ -131,6 +148,14 @@ public class ListaProductos extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnIngresarActionPerformed
+
+    private void btnCarritoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCarritoActionPerformed
+        if(frmCarrito==null){
+            frmCarrito=new Carrito(per_ses);
+            frmCarrito.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnCarritoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,6 +194,7 @@ public class ListaProductos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCarrito;
     private javax.swing.JButton btnInfoUsu;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JPanel jPanel1;
@@ -185,14 +211,14 @@ public class ListaProductos extends javax.swing.JFrame {
             ResultSetMetaData rsMD = rs.getMetaData();
             int cantidadCol = rsMD.getColumnCount();
             while (rs.next()) {
-                
-                JLabel titulo=new JLabel(rs.getString("Titulo"));
-                JTextArea descripcion=new JTextArea(rs.getString("Descripcion"));
+
+                JLabel titulo = new JLabel(rs.getString("Titulo"));
+                JTextArea descripcion = new JTextArea(rs.getString("Descripcion"));
                 descripcion.setLineWrap(true);
-                JLabel costo=new JLabel(rs.getInt("Costo")+"");
+                JLabel costo = new JLabel(rs.getInt("Costo") + "");
                 image = rs.getBytes("Foto");
-                //JPanel jpImg=new JPanel();
-                JLabel jpImg=new JLabel();
+                JPanel jpImg = new JPanel();
+                //JLabel jpImg=new JLabel();
                 jpImg.setPreferredSize(new Dimension(150, 150));
                 InputStream img = null;
                 img = rs.getBinaryStream("Foto");
@@ -205,16 +231,17 @@ public class ListaProductos extends javax.swing.JFrame {
 
                 } catch (IOException ex) {
                     System.err.println(ex);
-                    
+
                 }
-                
-                JButton boton=new JButton("Agregar al carrito");
+
+                JButton boton = new JButton("Agregar al carrito");
                 boton.setName(String.valueOf(rs.getInt("Id_Producto")));
                 boton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         AgregartoCarr(boton.getName());
-                    }    
+                        //JOptionPane.showMessageDialog(null, boton.getName());
+                    }
                 });
                 jPanel1.add(jpImg);
                 jPanel1.add(titulo);
@@ -228,6 +255,22 @@ public class ListaProductos extends javax.swing.JFrame {
             System.err.println(ex.toString());
         }
     }
-    private void AgregartoCarr(String name) {}
-}
 
+    private void AgregartoCarr(String name) {
+        SqlCarrito mdlsql = new SqlCarrito();
+        carrito carr = new carrito();
+        if (per_ses == null) {
+
+            JOptionPane.showMessageDialog(null, "Ingrese a su cuenta");
+        } else {
+            carr.setIdUsuario(per_ses.getId());
+                carr.setIdProducto(Integer.valueOf(name));
+                carr.setCantidad(1);
+            if (mdlsql.agregar(carr)) {
+                
+                JOptionPane.showMessageDialog(null, "Agregado al carrito");
+            }
+        }
+
+    }
+}

@@ -18,6 +18,7 @@ public class Persona_en_sesion {
     private String contraseña;
     private int imagen;
     private int tipo_usuario;
+    private double credito=0;
 
     public int getId() {
         return Id;
@@ -81,6 +82,14 @@ public class Persona_en_sesion {
 
     public void setTipo_usuario(int tipo_usuario) {
         this.tipo_usuario = tipo_usuario;
+    }
+
+    public double getCredito() {
+        return credito;
+    }
+
+    public void setCredito(double credito) {
+        this.credito = credito;
     }
     
 }

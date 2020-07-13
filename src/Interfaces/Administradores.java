@@ -14,17 +14,18 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-
 /**
  *
  * @author w-res
  */
 public class Administradores extends javax.swing.JFrame {
+
     Persona_en_sesion per_ses;
     NuevoAdmin frmnueNuevoAdmin;
     ActulizarAdmins frmActulizarAdmins;
     persona per;
     InicioSuperAdmin frmInicioSuperAdmin;
+
     /**
      * Creates new form Administradores
      */
@@ -32,8 +33,9 @@ public class Administradores extends javax.swing.JFrame {
         initComponents();
         Llenatabla();
     }
+
     public Administradores(Persona_en_sesion per) {
-        this.per_ses=per;
+        this.per_ses = per;
         initComponents();
         Llenatabla();
     }
@@ -175,16 +177,16 @@ public class Administradores extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        if(frmInicioSuperAdmin==null){
-            frmInicioSuperAdmin=new InicioSuperAdmin(per_ses);
+        if (frmInicioSuperAdmin == null) {
+            frmInicioSuperAdmin = new InicioSuperAdmin(per_ses);
             frmInicioSuperAdmin.setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        if(frmnueNuevoAdmin==null){
-            frmnueNuevoAdmin=new NuevoAdmin(per_ses);
+        if (frmnueNuevoAdmin == null) {
+            frmnueNuevoAdmin = new NuevoAdmin(per_ses);
             frmnueNuevoAdmin.setVisible(true);
             this.dispose();
         }
@@ -192,28 +194,27 @@ public class Administradores extends javax.swing.JFrame {
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
 
-        if(frmActulizarAdmins==null){
-            frmActulizarAdmins=new ActulizarAdmins(per_ses);
+        if (frmActulizarAdmins == null) {
+            frmActulizarAdmins = new ActulizarAdmins(per_ses);
             frmActulizarAdmins.setVisible(true);
             this.dispose();
         }
-        
+
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void ObjPresionado(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ObjPresionado
-        SqlUsuarios modsql=new SqlUsuarios();
+        SqlUsuarios modsql = new SqlUsuarios();
         int fila = jtAdmins.getSelectedRow();
-        
+
         try {
-            
-            
+
             String correo = jtAdmins.getValueAt(fila, 3).toString();
             ResultSet rs;
-            rs=modsql.extraerAdmin(correo);
-            
-            if(rs.next()) {
-                per=new persona();
-                per.setId(rs.getInt("Id_Persona")); 
+            rs = modsql.extraerAdmin(correo);
+
+            if (rs.next()) {
+                per = new persona();
+                per.setId(rs.getInt("Id_Persona"));
                 System.out.println(per.getId());
             }
         } catch (SQLException ex) {
@@ -222,23 +223,23 @@ public class Administradores extends javax.swing.JFrame {
     }//GEN-LAST:event_ObjPresionado
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        SqlUsuarios mdlsql=new SqlUsuarios();
-        if(per==null){
+        SqlUsuarios mdlsql = new SqlUsuarios();
+        if (per == null) {
             JOptionPane.showMessageDialog(null, "Seleccione algun registro de la tabla");
-        }else{
-            if(!mdlsql.eliminar(per.getId())){
-            JOptionPane.showMessageDialog(null, "Administrador eliminado");
-            Llenatabla();
-        }else{
-            JOptionPane.showMessageDialog(null, "No se pudo eliminar");
+        } else {
+            if (!mdlsql.eliminar(per.getId())) {
+                JOptionPane.showMessageDialog(null, "Administrador eliminado");
+                Llenatabla();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo eliminar");
+            }
         }
-        }
-        
+
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        if(frmInicioSuperAdmin==null){
-            frmInicioSuperAdmin=new InicioSuperAdmin(per_ses);
+        if (frmInicioSuperAdmin == null) {
+            frmInicioSuperAdmin = new InicioSuperAdmin(per_ses);
             frmInicioSuperAdmin.setVisible(true);
             this.dispose();
         }
@@ -292,11 +293,11 @@ public class Administradores extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void Llenatabla() {
-        SqlUsuarios mdlSql=new SqlUsuarios();
+        SqlUsuarios mdlSql = new SqlUsuarios();
         try {
             DefaultTableModel modelo = new DefaultTableModel();
             jtAdmins.setModel(modelo);
-            
+
             ResultSet rs;
             rs = mdlSql.extraerAdmins();
             ResultSetMetaData rsMD = rs.getMetaData();
@@ -307,17 +308,15 @@ public class Administradores extends javax.swing.JFrame {
             modelo.addColumn("Telefono");
             modelo.addColumn("Correo");
             modelo.addColumn("Foto");
-            
-            
-            //int[] tamaños=nes int[];
 
+            //int[] tamaños=nes int[];
             while (rs.next()) {
                 Object[] filas = new Object[cantidadCol];
                 for (int i = 0; i < cantidadCol; i++) {
                     filas[i] = rs.getObject(i + 1);
                 }
                 modelo.addRow(filas);
-                
+
             }
 
         } catch (SQLException ex) {
