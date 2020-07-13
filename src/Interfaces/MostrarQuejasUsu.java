@@ -54,7 +54,13 @@ public class MostrarQuejasUsu extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Quejas");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -141,6 +147,14 @@ public class MostrarQuejasUsu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnRegresarActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if(frmInformacionUsuario==null){
+            frmInformacionUsuario=new InformacionUsuario(per_ses);
+            frmInformacionUsuario.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
+
     /**
      * @param args the command line arguments
      */
@@ -188,22 +202,16 @@ public class MostrarQuejasUsu extends javax.swing.JFrame {
 
     private void carga() {
         
-        String[] titulos = {"Queja", "Mensaje", "Respondido"}; //"ID del usuario", "ID de queja"};
-        String[] registros = new String[100];
-
         String sql = "SELECT * FROM `Quejas` WHERE Id_usuario=?";
-
-       // model = new DefaultTableModel(null, titulos);
-
         //Conectar a base de datos
         Conexion cc = new Conexion();
         Connection conect = cc.getConexion();
 
         try {
 
-            //Statement st = (Statement) conect.createStatement();
+            
             ResultSet rs;
-            //rs.setS
+            
             PreparedStatement ps;
             ps = conect.prepareStatement(sql);
             ps.setInt(1, per_ses.getId());
@@ -212,7 +220,6 @@ public class MostrarQuejasUsu extends javax.swing.JFrame {
             while (rs.next()) {
                 JLabel jlnombre=new JLabel(rs.getString("Titulo"));
                 jPanel1.add(jlnombre);
-                //JLabel jlDesc=new JLabel(rs.getString("Descripcion"));
                 JTextArea jlDesc=new JTextArea(rs.getString("Descripcion"));
                 jPanel1.add(jlDesc);
                 jlDesc.setEditable(false);
@@ -222,23 +229,7 @@ public class MostrarQuejasUsu extends javax.swing.JFrame {
                 jlResp.setEditable(false);
                 jlResp.setLineWrap(true);
                 jPanel1.updateUI();
-                //jpnombre.setText(rs.getString("Titulo"));
-                
-/*
-                registros[0] = rs.getString("Titulo");
-                registros[1] = rs.getString("Descripcion");
-                if (rs.getString("Respuesta") == null) {
-                    registros[2] = "No contestado";
-                } else {
-                    registros[2] = "Contestado";
-                }
-
-                // registros[3] = rs.getString("Id_Queja");
-                model.addRow(registros);
-                //System.out.println(registros[3]);*/
             }
-
-            //tablaQuejas.setModel(model);
 
         } catch (SQLException ex) {
 

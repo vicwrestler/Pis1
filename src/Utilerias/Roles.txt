@@ -8,4 +8,6 @@ categoria:
  Video 1 
  Micro  2
  Opto   3
-
+fuentes 4
+sensores 5
+robotica 6

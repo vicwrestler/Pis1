@@ -70,7 +70,13 @@ InformacionUsuario frminformacionUsuario;
         btnActulizardatos = new javax.swing.JButton();
         jlTelefono = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Inicio");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jtAdmin.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -271,6 +277,14 @@ InformacionUsuario frminformacionUsuario;
             this.dispose();
         }
     }//GEN-LAST:event_btnGestUsuActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if(frmListaProductos==null){
+            frmListaProductos=new ListaProductos();
+            frmListaProductos.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

@@ -38,6 +38,9 @@ public class InformacionUsuario extends javax.swing.JFrame {
     public InformacionUsuario(Persona_en_sesion per){
         this.per_ses=per;
         initComponents();
+        if(per.getTipo_usuario()==0){
+            btnQuejas.setVisible(false);
+        }
         Inicia();
     }
 
@@ -65,7 +68,13 @@ public class InformacionUsuario extends javax.swing.JFrame {
 
         jButton2.setText("jButton2");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Mi Informacion");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpImgLayout = new javax.swing.GroupLayout(jpImg);
         jpImg.setLayout(jpImgLayout);
@@ -202,6 +211,22 @@ public class InformacionUsuario extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnQuejasActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if(per_ses.getTipo_usuario()==2||per_ses.getTipo_usuario()==1){
+            if(frmListaProductos==null){
+                frmListaProductos=new ListaProductos(per_ses);
+                frmListaProductos.setVisible(true);
+                this.dispose();
+            }
+        }else if(per_ses.getTipo_usuario()==0){
+            if(frmInicioSuperAdmin==null){
+                frmInicioSuperAdmin=new InicioSuperAdmin(per_ses);
+                frmInicioSuperAdmin.setVisible(true);
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

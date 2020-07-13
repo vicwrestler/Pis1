@@ -172,7 +172,7 @@ int conteo = 0;
                 boton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        AgregartoCarr(per_ses.getName());
+                        //AgregartoCarr(per_ses.getName());
                     }
                 });
                 jPanel1.add(titulo);

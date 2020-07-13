@@ -5,7 +5,6 @@
  */
 package Interfaces;
 
-
 import Clases.Persona_en_sesion;
 import Clases.persona;
 import Model.SqlUsuarios;
@@ -18,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
 
 /**
  *
@@ -34,11 +32,13 @@ public class ActualizarDatosUsuario extends javax.swing.JFrame {
     Persona_en_sesion per_ses;
     InicioAdmin frmIniAdm;
     InformacionUsuario frminformacionUsuario;
+
     public ActualizarDatosUsuario() {
         initComponents();
     }
-    public ActualizarDatosUsuario(Persona_en_sesion per_ses){
-        this.per_ses=per_ses;
+
+    public ActualizarDatosUsuario(Persona_en_sesion per_ses) {
+        this.per_ses = per_ses;
         initComponents();
         mostrardatos();
     }
@@ -103,7 +103,13 @@ public class ActualizarDatosUsuario extends javax.swing.JFrame {
 
         jButton2.setText("Registrar");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Actualizar datos");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Actualizar datos de usuario");
@@ -256,50 +262,92 @@ public class ActualizarDatosUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefonoActionPerformed
 
     private void btnactualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnactualizarActionPerformed
-        FileInputStream fis=null;
-        String correo=per_ses.getCorreo();
-        try {
-           
-            SqlUsuarios modSql=new SqlUsuarios();
-            persona mod=new persona();
-            fis = new FileInputStream(fichero);
-            String pass=new String(txtContraseña.getPassword());
-            String confpass=new String(txtConfContraseña.getPassword());
-            if(pass.equals(confpass)){
-                String newpass=hash.hash1(pass);
-                mod.setNombre(txtNombre.getText());
-                mod.setApellido(txtApellido.getText());
-                mod.setTelefono(txtTelefono.getText());
-                mod.setCorreo(txtCorreo.getText());
-                mod.setContraseña(newpass);
-                mod.setImagen((int) fichero.length());
-                mod.setTipo_usuario(per_ses.getTipo_usuario());
-                if(modSql.actualizar(mod, fis, correo)){
-                    JOptionPane.showMessageDialog(null, "Actualizado");
-                    per_ses.setNombre(mod.getNombre());
-                    per_ses.setApellido(mod.getApellido());
-                    per_ses.setCorreo(mod.getCorreo());
-                    per_ses.setTelefono(mod.getTelefono());
-                    per_ses.setContraseña(mod.getContraseña());
-                    per_ses.setImagen(mod.getImagen());
-                    mostrardatos();
-                }else{
-                    JOptionPane.showMessageDialog(null, "error");
+        SqlUsuarios modSql = new SqlUsuarios();
+        persona mod = new persona();
+        FileInputStream fis = null;
+        String correo = per_ses.getCorreo();
+        String pass = new String(txtContraseña.getPassword());
+        String confpass = new String(txtConfContraseña.getPassword());
+        if (verificardatos(pass, confpass) == true) {
+            if (fichero == null) {
+                    String newpass = hash.hash1(pass);
+                    mod.setNombre(txtNombre.getText());
+                    mod.setApellido(txtApellido.getText());
+                    mod.setTelefono(txtTelefono.getText());
+                    mod.setCorreo(txtCorreo.getText());
+                    mod.setContraseña(newpass);
+                    mod.setTipo_usuario(per_ses.getTipo_usuario());
+                    if (modSql.actualizar(mod, correo)) {
+                        JOptionPane.showMessageDialog(null, "Actualizado");
+                        per_ses.setNombre(mod.getNombre());
+                        per_ses.setApellido(mod.getApellido());
+                        per_ses.setCorreo(mod.getCorreo());
+                        per_ses.setTelefono(mod.getTelefono());
+                        per_ses.setContraseña(mod.getContraseña());
+                        if (this.per_ses.getTipo_usuario() == 1) {
+                            if (frmIniAdm == null) {
+                                frmIniAdm = new InicioAdmin(this.per_ses);
+                                frmIniAdm.setVisible(true);
+                                this.dispose();
+                            }
+                        } else if (per_ses.getTipo_usuario() == 2 || per_ses.getTipo_usuario() == 0) {
+                            if (frminformacionUsuario == null) {
+                                frminformacionUsuario = new InformacionUsuario(per_ses);
+                                frminformacionUsuario.setVisible(true);
+                                this.dispose();
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "error");
+                    }
+            } else {
+                try {
+                    fis = new FileInputStream(fichero);
+                    String newpass = hash.hash1(pass);
+                    mod.setNombre(txtNombre.getText());
+                    mod.setApellido(txtApellido.getText());
+                    mod.setTelefono(txtTelefono.getText());
+                    mod.setCorreo(txtCorreo.getText());
+                    mod.setContraseña(newpass);
+                    mod.setImagen((int) fichero.length());
+                    mod.setTipo_usuario(per_ses.getTipo_usuario());
+                    if (modSql.actualizar(mod, fis, correo)) {
+                        JOptionPane.showMessageDialog(null, "Actualizado");
+                        per_ses.setNombre(mod.getNombre());
+                        per_ses.setApellido(mod.getApellido());
+                        per_ses.setCorreo(mod.getCorreo());
+                        per_ses.setTelefono(mod.getTelefono());
+                        per_ses.setContraseña(mod.getContraseña());
+                        per_ses.setImagen(mod.getImagen());
+                        if (this.per_ses.getTipo_usuario() == 1) {
+                            if (frmIniAdm == null) {
+                                frmIniAdm = new InicioAdmin(this.per_ses);
+                                frmIniAdm.setVisible(true);
+                                this.dispose();
+                            }
+                        } else if (per_ses.getTipo_usuario() == 2 || per_ses.getTipo_usuario() == 0) {
+                            if (frminformacionUsuario == null) {
+                                frminformacionUsuario = new InformacionUsuario(per_ses);
+                                frminformacionUsuario.setVisible(true);
+                                this.dispose();
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "error");
+                    }
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        fis.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                
-            }else{
-                JOptionPane.showMessageDialog(null, "las contraseñas no son iguales");
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ActualizarDatosUsuario.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
+
     }//GEN-LAST:event_btnactualizarActionPerformed
 
     private void txtConfContraseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtConfContraseñaActionPerformed
@@ -312,27 +360,44 @@ public class ActualizarDatosUsuario extends javax.swing.JFrame {
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int seleccion = fc.showOpenDialog(this);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
-             fichero = fc.getSelectedFile();
-             ruta = fichero.getAbsolutePath();
-        }else{
-        JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");}
+            fichero = fc.getSelectedFile();
+            ruta = fichero.getAbsolutePath();
+        } else {
+            JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");
+        }
     }//GEN-LAST:event_btncargaimagenActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        if(this.per_ses.getTipo_usuario()==1){
-            if(frmIniAdm==null){
-                frmIniAdm=new InicioAdmin(this.per_ses);
+        if (this.per_ses.getTipo_usuario() == 1) {
+            if (frmIniAdm == null) {
+                frmIniAdm = new InicioAdmin(this.per_ses);
                 frmIniAdm.setVisible(true);
                 this.dispose();
             }
-        }else if(per_ses.getTipo_usuario()==2||per_ses.getTipo_usuario()==0){
-            if(frminformacionUsuario==null){
-                frminformacionUsuario=new InformacionUsuario(per_ses);
+        } else if (per_ses.getTipo_usuario() == 2 || per_ses.getTipo_usuario() == 0) {
+            if (frminformacionUsuario == null) {
+                frminformacionUsuario = new InformacionUsuario(per_ses);
                 frminformacionUsuario.setVisible(true);
                 this.dispose();
             }
         }
     }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (this.per_ses.getTipo_usuario() == 1) {
+            if (frmIniAdm == null) {
+                frmIniAdm = new InicioAdmin(this.per_ses);
+                frmIniAdm.setVisible(true);
+                this.dispose();
+            }
+        } else if (per_ses.getTipo_usuario() == 2 || per_ses.getTipo_usuario() == 0) {
+            if (frminformacionUsuario == null) {
+                frminformacionUsuario = new InformacionUsuario(per_ses);
+                frminformacionUsuario.setVisible(true);
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -405,11 +470,35 @@ public class ActualizarDatosUsuario extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void mostrardatos() {
-        
+
         txtNombre.setText(per_ses.getNombre());
         txtApellido.setText(per_ses.getApellido());
         txtCorreo.setText(per_ses.getCorreo());
         txtTelefono.setText(per_ses.getTelefono());
-        
+
+    }
+
+    private boolean verificardatos(String pass, String confpass) {
+        if (txtNombre.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar su nombre");
+            return false;
+        }
+        if (txtApellido.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar su Apellido");
+            return false;
+        }
+        if (txtTelefono.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar su Telefono");
+            return false;
+        }
+        if (txtCorreo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de ingresar su Correo");
+            return false;
+        }
+        if (!pass.equalsIgnoreCase(confpass)) {
+            JOptionPane.showMessageDialog(null, "Las contraseñas deben de ser iguales");
+            return false;
+        }
+        return true;
     }
 }

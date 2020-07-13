@@ -43,12 +43,12 @@ public class SqlProducto {
         }
 
     }
-    public boolean actualizar(producto pro, FileInputStream fis){
+    public boolean actualizar(producto pro, FileInputStream fis, int id){
         PreparedStatement ps=null;
         Conexion objcon=new Conexion();
         Connection con=objcon.getConexion();
         String sql="UPDATE almacen SET Titulo=?,Descripcion=?,Costo=?,"
-                + "Categoria=?,Foto=?,Cantidad=? WHERE Id_admin=?";
+                + "Categoria=?,Foto=?,Cantidad=? WHERE Id_admin=? AND Id_Producto=?";
         try {
             ps=con.prepareStatement(sql);
             ps.setString(1, pro.getTitulo());
@@ -58,6 +58,29 @@ public class SqlProducto {
             ps.setBinaryStream(5, fis, pro.getImagen());
             ps.setInt(6, pro.getCantidad());
             ps.setInt(7, pro.getId_admin());
+            ps.setInt(8, id);
+            ps.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SqlUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    public boolean actualizar(producto pro, int id){
+        PreparedStatement ps=null;
+        Conexion objcon=new Conexion();
+        Connection con=objcon.getConexion();
+        String sql="UPDATE almacen SET Titulo=?,Descripcion=?,Costo=?,"
+                + "Categoria=?,Cantidad=? WHERE Id_admin=? AND Id_Producto=?";
+        try {
+            ps=con.prepareStatement(sql);
+            ps.setString(1, pro.getTitulo());
+            ps.setString(2, pro.getDescripcion());
+            ps.setFloat(3, pro.getCosto());
+            ps.setInt(4, pro.getCategoria());
+            ps.setInt(5, pro.getCantidad());
+            ps.setInt(6, pro.getId_admin());
+            ps.setInt(7, id);
             ps.execute();
             return true;
         } catch (SQLException ex) {
@@ -112,7 +135,7 @@ public class SqlProducto {
             ResultSet rs;
             Conexion objcon=new Conexion();
             Connection con=objcon.getConexion();
-            String sql = "SELECT alm.Titulo, alm.Descripcion, alm.Costo, alm.Categoria, alm.Cantidad, alm.Foto  \n" +
+            String sql = "SELECT alm.Id_Producto, alm.Titulo, alm.Descripcion, alm.Costo, alm.Categoria, alm.Cantidad, alm.Foto  \n" +
             "FROM almacen AS alm, Personas AS per WHERE per.Id_Persona=alm.Id_admin AND per.Id_Persona=? AND alm.Titulo=?";
         
         try {

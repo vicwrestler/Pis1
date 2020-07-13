@@ -20,12 +20,11 @@ public class Login0 extends javax.swing.JFrame {
     NuevoUsuario newusu = null;
     InicioAdmin frmInicioAdmin = null;
     InicioSuperAdmin frmsuperAdmin;
-    ListaProductos frmListaProductos=null;
+    ListaProductos frmListaProductos = null;
 
     /**
      * Creates new form Login0
      */
-
     public Login0() {
         initComponents();
     }
@@ -48,7 +47,13 @@ public class Login0 extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         botonRegresar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Inicio de sesion");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         botonNuevoUsuario.setText("Nuevo usuario");
         botonNuevoUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -58,7 +63,7 @@ public class Login0 extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("Login");
+        jLabel1.setText("Inicio Sesion");
 
         botonContinuar.setText("Continuar");
         botonContinuar.addActionListener(new java.awt.event.ActionListener() {
@@ -102,17 +107,15 @@ public class Login0 extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtusuario, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                            .addComponent(txtcontra))))
+                            .addComponent(txtcontra)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)))
                 .addContainerGap(70, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(167, 167, 167))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(botonRegresar)
-                        .addContainerGap())))
+                .addContainerGap(309, Short.MAX_VALUE)
+                .addComponent(botonRegresar)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,19 +171,22 @@ public class Login0 extends javax.swing.JFrame {
                             frmInicioAdmin = new InicioAdmin(per_ses);
                             frmInicioAdmin.setVisible(true);
                             this.dispose();
-                        }   break;
+                        }
+                        break;
                     case 2:
                         if (frmListaProductos == null) {
                             frmListaProductos = new ListaProductos(per_ses);
                             frmListaProductos.setVisible(true);
                             this.dispose();
-                        }   break;
+                        }
+                        break;
                     case 0:
                         if (frmsuperAdmin == null) {
                             frmsuperAdmin = new InicioSuperAdmin(per_ses);
                             frmsuperAdmin.setVisible(true);
                             this.dispose();
-                        }   break;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -198,11 +204,19 @@ public class Login0 extends javax.swing.JFrame {
             frmListaProductos.setVisible(true);
             this.dispose();
     }//GEN-LAST:event_botonRegresarActionPerformed
+    }
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (frmListaProductos == null) {
+            frmListaProductos = new ListaProductos();
+            frmListaProductos.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
-         * @param args the command line arguments
-         */
-    public static void main(String args[]){
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

@@ -50,7 +50,13 @@ public class FormularioQuejas extends javax.swing.JFrame {
         btnEnviar = new javax.swing.JButton();
         btnregresar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Nueva Queja");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Formulario de quejas");
@@ -167,6 +173,14 @@ public class FormularioQuejas extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnregresarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (frmMostrarQuejas == null) {
+            frmMostrarQuejas = new MostrarQuejasUsu(per_ses);
+            frmMostrarQuejas.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

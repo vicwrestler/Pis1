@@ -61,7 +61,13 @@ public class NuevoUsuario extends javax.swing.JFrame {
         txtContra = new javax.swing.JPasswordField();
         txtConfcontra = new javax.swing.JPasswordField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Nuevo Usuario");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Nombre:");
 
@@ -266,6 +272,14 @@ public class NuevoUsuario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "no se pudo cargar la imagen");
         }
     }//GEN-LAST:event_btnCargaimagenActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (frmlogin == null) {
+            frmlogin = new Login0();
+            frmlogin.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

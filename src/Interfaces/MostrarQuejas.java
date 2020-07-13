@@ -71,7 +71,13 @@ public class MostrarQuejas extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel8.setText("Confirmación de pago");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Quejas");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel9.setText("Mostrar quejas");
@@ -227,6 +233,17 @@ public class MostrarQuejas extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnResponderActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (per_ses.getTipo_usuario() == 1) {
+            if (frmInicioAdmin == null) {
+                frmInicioAdmin = new InicioAdmin(per_ses);
+                frmInicioAdmin.setVisible(true);
+                this.dispose();
+            }
+
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

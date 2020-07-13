@@ -68,7 +68,13 @@ public class NuevoAdmin extends javax.swing.JFrame {
         txtContra = new javax.swing.JPasswordField();
         txtConfContra = new javax.swing.JPasswordField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Nuevo Administrador");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel8.setText("Nuevo administrador");
@@ -260,6 +266,14 @@ public class NuevoAdmin extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_botonRegresarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (frmAdministradores == null) {
+            frmAdministradores = new Administradores(per_ses);
+            frmAdministradores.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

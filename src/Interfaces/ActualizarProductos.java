@@ -23,7 +23,6 @@ import javax.swing.JOptionPane;
 
 import javax.swing.table.DefaultTableModel;
 
-
 /**
  *
  * @author w-res
@@ -34,6 +33,8 @@ public class ActualizarProductos extends javax.swing.JFrame {
     String ruta;
     Persona_en_sesion persona_en_sesion;
     Productos frmProductos;
+    int Id_Pro;
+    SqlProducto mdSqlProducto;
 
     /**
      * Creates new form tabla
@@ -44,6 +45,9 @@ public class ActualizarProductos extends javax.swing.JFrame {
         btnGCategoria.add(jrbMicro);
         btnGCategoria.add(jrbOpto);
         btnGCategoria.add(jrbVideo);
+        btnGCategoria.add(jrFuentes);
+        btnGCategoria.add(jrSensores);
+        btnGCategoria.add(jrRobotica);
         inicia();
     }
 
@@ -54,6 +58,9 @@ public class ActualizarProductos extends javax.swing.JFrame {
         btnGCategoria.add(jrbMicro);
         btnGCategoria.add(jrbOpto);
         btnGCategoria.add(jrbVideo);
+        btnGCategoria.add(jrFuentes);
+        btnGCategoria.add(jrSensores);
+        btnGCategoria.add(jrRobotica);
         inicia();
     }
 
@@ -86,8 +93,17 @@ public class ActualizarProductos extends javax.swing.JFrame {
         jrbVideo = new javax.swing.JRadioButton();
         btnRegresar = new javax.swing.JButton();
         btnCargaImg = new javax.swing.JButton();
+        jrFuentes = new javax.swing.JRadioButton();
+        jrSensores = new javax.swing.JRadioButton();
+        jrRobotica = new javax.swing.JRadioButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Actualizar producto");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jtprueba.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -163,6 +179,12 @@ public class ActualizarProductos extends javax.swing.JFrame {
             }
         });
 
+        jrFuentes.setText("Fuentes");
+
+        jrSensores.setText("Sensores");
+
+        jrRobotica.setText("Robotica");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,9 +192,19 @@ public class ActualizarProductos extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addComponent(btnRegresar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnActualizar)
+                        .addGap(16, 16, 16))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCargaImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,30 +224,25 @@ public class ActualizarProductos extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jrbAudio)
-                                    .addComponent(jLabel6))
+                                .addComponent(jrbAudio)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jrbVideo)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jrbMicro))
-                                    .addComponent(btnCargaImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jrbVideo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jrbOpto)))
-                        .addContainerGap(34, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(btnRegresar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnActualizar)
-                        .addGap(25, 25, 25))))
+                                .addComponent(jrbMicro)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jrbOpto))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jrFuentes)
+                                .addGap(18, 18, 18)
+                                .addComponent(jrSensores)
+                                .addGap(18, 18, 18)
+                                .addComponent(jrRobotica)))
+                        .addContainerGap(34, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -244,12 +271,17 @@ public class ActualizarProductos extends javax.swing.JFrame {
                             .addComponent(jrbOpto))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(btnCargaImg))
-                        .addGap(40, 40, 40)
+                            .addComponent(jrFuentes)
+                            .addComponent(jrSensores)
+                            .addComponent(jrRobotica))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnActualizar)
-                            .addComponent(btnRegresar))))
+                            .addComponent(btnCargaImg)
+                            .addComponent(jLabel6))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRegresar)
+                            .addComponent(btnActualizar))))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -257,25 +289,42 @@ public class ActualizarProductos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jtpruebaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtpruebaMouseClicked
-        SqlProducto mdSqlProducto=new SqlProducto();
+        mdSqlProducto = new SqlProducto();
         try {
             int fila = jtprueba.getSelectedRow();
             String nombrefila = jtprueba.getValueAt(fila, 0).toString();
             ResultSet rs;
-            rs=mdSqlProducto.extraerProdalmacen(persona_en_sesion, nombrefila);
+            rs = mdSqlProducto.extraerProdalmacen(persona_en_sesion, nombrefila);
             while (rs.next()) {
+                Id_Pro=rs.getInt("Id_Producto");
                 txtTitulo.setText(rs.getString("Titulo"));
                 txtDescripcion.setText(rs.getString("Descripcion"));
                 txtCosto.setText(rs.getString("Costo"));
                 txtCantidad.setText(rs.getString("Cantidad"));
-                if(rs.getInt("Categoria")==0){
-                    jrbAudio.setSelected(true);
-                }else if(rs.getInt("Categoria")==1){
-                    jrbVideo.setSelected(true);
-                }else if(rs.getInt("Categoria")==2){
-                    jrbMicro.setSelected(true);
-                }else if(rs.getInt("Categoria")==3){
-                    jrbOpto.setSelected(true);
+                switch (rs.getInt("Categoria")) {
+                    case 0:
+                        jrbAudio.setSelected(true);
+                        break;
+                    case 1:
+                        jrbVideo.setSelected(true);
+                        break;
+                    case 2:
+                        jrbMicro.setSelected(true);
+                        break;
+                    case 3:
+                        jrbOpto.setSelected(true);
+                        break;
+                    case 4:
+                        jrFuentes.setSelected(true);
+                        break;
+                    case 5:
+                        jrSensores.setSelected(true);
+                        break;
+                    case 6:
+                        jrRobotica.setSelected(true);
+                        break;
+                    default:
+                        break;
                 }
             }
         } catch (SQLException ex) {
@@ -291,40 +340,78 @@ public class ActualizarProductos extends javax.swing.JFrame {
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         FileInputStream fis = null;
         SqlProducto mdSqlProducto = new SqlProducto();
-        try {
+        producto pro = new producto();
+        if (verificardatos() == true && mdSqlProducto!=null) {
+            if (fichero == null) {
+                pro.setTitulo(txtTitulo.getText());
+                pro.setDescripcion(txtDescripcion.getText());
+                pro.setCosto(Float.parseFloat(txtCosto.getText()));
+                if (jrbAudio.isSelected()) {
+                    pro.setCategoria(0);
+                } else if (jrbVideo.isSelected()) {
+                    pro.setCategoria(1);
+                } else if (jrbMicro.isSelected()) {
+                    pro.setCategoria(2);
+                } else if (jrbOpto.isSelected()) {
+                    pro.setCategoria(3);
+                } else if (jrFuentes.isSelected()) {
+                    pro.setCategoria(4);
+                } else if (jrSensores.isSelected()) {
+                    pro.setCategoria(5);
+                } else if (jrRobotica.isSelected()) {
+                    pro.setCategoria(6);
+                }
+                pro.setCantidad(Integer.parseInt(txtCantidad.getText()));
+                pro.setId_admin(persona_en_sesion.getId());
+                if (mdSqlProducto.actualizar(pro, Id_Pro)) {
+                    JOptionPane.showMessageDialog(null, "Registro actualizado");
+                    limpia_con();
+                    inicia();
+                }
+            } else {
+                try {
+                    fis = new FileInputStream(fichero);
+                    pro.setTitulo(txtTitulo.getText());
+                    pro.setDescripcion(txtDescripcion.getText());
+                    pro.setCosto(Float.parseFloat(txtCosto.getText()));
+                    if (jrbAudio.isSelected()) {
+                        pro.setCategoria(0);
+                    } else if (jrbVideo.isSelected()) {
+                        pro.setCategoria(1);
+                    } else if (jrbMicro.isSelected()) {
+                        pro.setCategoria(2);
+                    } else if (jrbOpto.isSelected()) {
+                        pro.setCategoria(3);
+                    } else if (jrFuentes.isSelected()) {
+                        pro.setCategoria(4);
+                    } else if (jrSensores.isSelected()) {
+                        pro.setCategoria(5);
+                    } else if (jrRobotica.isSelected()) {
+                        pro.setCategoria(6);
+                    }
+                    pro.setImagen((int) fichero.length());
+                    pro.setCantidad(Integer.parseInt(txtCantidad.getText()));
+                    pro.setId_admin(persona_en_sesion.getId());
+                    if (mdSqlProducto.actualizar(pro, fis, Id_Pro)) {
+                        JOptionPane.showMessageDialog(null, "Registro actualizado");
+                        limpia_con();
+                        inicia();
+                    }
 
-            producto pro = new producto();
-            fis = new FileInputStream(fichero);
-            pro.setTitulo(txtTitulo.getText());
-            pro.setDescripcion(txtDescripcion.getText());
-            pro.setCosto(Float.parseFloat(txtCosto.getText()));
-            if (jrbAudio.isSelected()) {
-                pro.setCategoria(0);
-            } else if (jrbVideo.isSelected()) {
-                pro.setCategoria(1);
-            } else if (jrbMicro.isSelected()) {
-                pro.setCategoria(2);
-            } else if (jrbOpto.isSelected()) {
-                pro.setCategoria(4);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ActualizarProductos.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        fis.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ActualizarProductos.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-            pro.setImagen((int) fichero.length());
-            pro.setCantidad(Integer.parseInt(txtCantidad.getText()));
-            pro.setId_admin(persona_en_sesion.getId());
-            if (mdSqlProducto.actualizar(pro, fis)) {
-                JOptionPane.showMessageDialog(null, "Registro actualizado");
-                limpia_con();
-                inicia();
-            }
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ActualizarProductos.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ActualizarProductos.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Debe de seleccionar un producto");
         }
+
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
@@ -347,6 +434,14 @@ public class ActualizarProductos extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnCargaImgActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (frmProductos == null) {
+            frmProductos = new Productos(persona_en_sesion);
+            frmProductos.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -402,6 +497,9 @@ public class ActualizarProductos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JRadioButton jrFuentes;
+    private javax.swing.JRadioButton jrRobotica;
+    private javax.swing.JRadioButton jrSensores;
     private javax.swing.JRadioButton jrbAudio;
     private javax.swing.JRadioButton jrbMicro;
     private javax.swing.JRadioButton jrbOpto;
@@ -414,7 +512,7 @@ public class ActualizarProductos extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void inicia() {
-        SqlProducto modsql=new SqlProducto();
+        SqlProducto modsql = new SqlProducto();
         try {
             DefaultTableModel modelo = new DefaultTableModel();
             jtprueba.setModel(modelo);
@@ -429,13 +527,37 @@ public class ActualizarProductos extends javax.swing.JFrame {
             modelo.addColumn("Categotia");
             modelo.addColumn("Cantidad");
             modelo.addColumn("foto");
-            
-            //int[] tamaños=nes int[];
 
+            //int[] tamaños=nes int[];
             while (rs.next()) {
                 Object[] filas = new Object[cantidadCol];
                 for (int i = 0; i < cantidadCol; i++) {
-                    filas[i] = rs.getObject(i + 1);
+                    if(i==3){
+                        if(rs.getObject(i + 1).equals(0)){
+                            filas[i]="Audio";
+                        }
+                        if(rs.getObject(i + 1).equals(1)){
+                            filas[i]="Video";
+                        }
+                        if(rs.getObject(i + 1).equals(2)){
+                            filas[i]="Microcontrolador";
+                        }
+                        if(rs.getObject(i + 1).equals(3)){
+                            filas[i]="Optoelectronica";
+                        }
+                        if(rs.getObject(i + 1).equals(4)){
+                            filas[i]="Fuentes";
+                        }
+                        if(rs.getObject(i + 1).equals(5)){
+                            filas[i]="Sensores";
+                        }
+                        if(rs.getObject(i + 1).equals(6)){
+                            filas[i]="Robotica";
+                        }
+                    }else{
+                        filas[i] = rs.getObject(i + 1);
+                    }
+                    
                 }
                 modelo.addRow(filas);
             }
@@ -451,5 +573,26 @@ public class ActualizarProductos extends javax.swing.JFrame {
         txtCosto.setText("");
         txtCantidad.setText("");
         btnGCategoria.clearSelection();
+    }
+
+    private boolean verificardatos() {
+        if (txtTitulo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de tener un titulo");
+            return false;
+        }
+        if (txtDescripcion.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de tener una descripcion");
+            return false;
+        }
+        if (txtCosto.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de tener un costo");
+            return false;
+        }
+        if (txtCantidad.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe de tener una cantidad");
+            return false;
+        }
+
+        return true;
     }
 }

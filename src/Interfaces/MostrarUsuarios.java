@@ -77,7 +77,13 @@ public class MostrarUsuarios extends javax.swing.JFrame {
 
         BotonRegresar.setText("Regresar");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Usuarios");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Mostrar usuarios");
@@ -189,6 +195,21 @@ public class MostrarUsuarios extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Seleccione un registro");
         }
     }//GEN-LAST:event_BotonEliminar1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (per_ses.getTipo_usuario() == 0) {
+            frmInicioSuperAdmin = new InicioSuperAdmin(per_ses);
+            frmInicioSuperAdmin.setVisible(true);
+            this.dispose();
+        }
+        if (per_ses.getTipo_usuario() == 1) {
+            if (frmInicioAdmin == null) {
+                frmInicioAdmin = new InicioAdmin(per_ses);
+                frmInicioAdmin.setVisible(true);
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

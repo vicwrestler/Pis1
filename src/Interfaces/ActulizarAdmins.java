@@ -31,6 +31,7 @@ public class ActulizarAdmins extends javax.swing.JFrame {
     Administradores frmAdministradores;
     String contraseña;
     Persona_en_sesion per_ses;
+    SqlUsuarios mdlsql;
 
     /**
      * Creates new form ActulizarAdmins
@@ -70,7 +71,13 @@ public class ActulizarAdmins extends javax.swing.JFrame {
         txtCorreo = new javax.swing.JTextField();
         btnRegresar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Actualizar Administradores");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jtAdmins.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -204,7 +211,7 @@ public class ActulizarAdmins extends javax.swing.JFrame {
         FileInputStream fis = null;
         SqlUsuarios mdlsql = new SqlUsuarios();
         persona per = new persona();
-        if (verificarDatos() == true) {
+        if (verificarDatos() == true&& mdlsql!=null) {
             try {
                 if (fichero == null) {
                     per.setNombre(txtNombre.getText());
@@ -234,6 +241,8 @@ public class ActulizarAdmins extends javax.swing.JFrame {
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ActulizarAdmins.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else{
+            JOptionPane.showMessageDialog(null, "debe de seleccionar un Administrador");
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
@@ -242,7 +251,7 @@ public class ActulizarAdmins extends javax.swing.JFrame {
     }//GEN-LAST:event_txtApellidoActionPerformed
 
     private void jtAdminsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtAdminsMouseClicked
-        SqlUsuarios mdlsql = new SqlUsuarios();
+        mdlsql = new SqlUsuarios();
 
         try {
             int fila = jtAdmins.getSelectedRow();
@@ -282,6 +291,14 @@ public class ActulizarAdmins extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (frmAdministradores == null) {
+            frmAdministradores = new Administradores(per_ses);
+            frmAdministradores.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

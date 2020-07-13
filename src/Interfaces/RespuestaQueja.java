@@ -58,7 +58,13 @@ public class RespuestaQueja extends javax.swing.JFrame {
         BotonEnviar = new javax.swing.JButton();
         txtRespuesta = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Responder Queja");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Respuesta a queja");
@@ -150,8 +156,6 @@ public class RespuestaQueja extends javax.swing.JFrame {
             
             Conexion objcon = new Conexion();
             Connection con = objcon.getConexion();
-           // int Id_admin = respQueja.getId_admin();
-            //int Id_qj = respQueja.getId();
             
             try {
                 
@@ -222,6 +226,12 @@ public class RespuestaQueja extends javax.swing.JFrame {
         frmRegreso.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        MostrarQuejas frmRegreso=new MostrarQuejas(per_ses);
+        frmRegreso.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
